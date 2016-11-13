@@ -30,3 +30,4 @@ bld/
 *.VisualState.xml
 TestResult.xml
 
+TestApp.exe.config

@@ -37,6 +37,7 @@
     <Reference Include="ScriptEngine">
       <HintPath>..\packages\ScriptEngine.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
