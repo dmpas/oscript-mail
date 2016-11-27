@@ -8,6 +8,7 @@ using System;
 using ScriptEngine.Machine.Contexts;
 using ScriptEngine.Machine;
 using ScriptEngine.HostedScript.Library;
+using System.IO;
 using MimeKit;
 
 namespace OneScript.InternetMail
@@ -15,6 +16,9 @@ namespace OneScript.InternetMail
     [ContextClass("ИнтернетПочтовоеСообщение", "InternetMailMessage")]
     public class InternetMailMessage : AutoContext<InternetMailMessage>
     {
+
+		private readonly HeaderList headers = new HeaderList();
+
         public InternetMailMessage()
         {
             DeliveryReceiptAddresses = new InternetMailAddresses();
@@ -29,6 +33,27 @@ namespace OneScript.InternetMail
 
             Texts = new InternetMailTexts();
         }
+
+		public InternetMailMessage(HeaderList headers): this()
+		{
+			using (var sw = new MemoryStream())
+			{
+				headers.WriteTo(sw);
+				sw.Position = 0;
+
+				using (var tr = new StreamReader(sw))
+				{
+					Header = tr.ReadToEnd();
+				}
+			}
+
+			foreach (var header in headers)
+			{
+				SetField(header.Id.ToHeaderName(), ValueFactory.Create(header.Value));
+			}
+
+			DateReceived = DateTime.Now;
+		}
 
         [ContextProperty("АдресаУведомленияОДоставке", "DeliveryReceiptAddresses")]
         public InternetMailAddresses DeliveryReceiptAddresses { get; }
@@ -88,7 +113,7 @@ namespace OneScript.InternetMail
         public InternetMailAddresses Bcc { get; }
 
         [ContextProperty("СмещениеДатыОтправления", "PostingDateOffset")]
-        public int PostingDateOffset { get; }
+		public decimal PostingDateOffset { get; private set; }
 
         [ContextProperty("СпособКодированияНеASCIIСимволов", "NonAsciiSymbolsEncodingMode")]
         public InternetMailMessageNonAsciiSymbolsEncodingMode NonAsciiSymbolsEncodingMode { get; set; }
@@ -131,7 +156,8 @@ namespace OneScript.InternetMail
         [ContextMethod("ПолучитьПолеЗаголовка", "GetField")]
         public IValue GetField(string fieldName, IValue type)
         {
-            return ValueFactory.Create();
+			var value = headers[fieldName];
+            return ValueFactory.Create(value);
         }
 
         [ContextMethod("УстановитьИсходныеДанные", "SetSourceData")]
@@ -144,7 +170,34 @@ namespace OneScript.InternetMail
         {
             if (encodingMode == null)
                 encodingMode = NonAsciiSymbolsEncodingMode;
-        }
+
+			var stringValue = value.AsString();
+
+			headers.Add(fieldName, stringValue);
+			if (fieldName.Equals("BCC", StringComparison.InvariantCultureIgnoreCase))
+				Bcc.Add(stringValue);
+
+			else if (fieldName.Equals("CC", StringComparison.InvariantCultureIgnoreCase))
+				Cc.Add(stringValue);
+
+			else if (fieldName.Equals("Date", StringComparison.InvariantCultureIgnoreCase))
+			{
+				DateTimeOffset res;
+				if (MimeKit.Utils.DateUtils.TryParse(stringValue, out res))
+				{
+					PostingDate = res.DateTime;
+					PostingDateOffset = new Decimal(res.Offset.TotalSeconds);
+				}
+			}
+			else if (fieldName.Equals("From", StringComparison.InvariantCultureIgnoreCase))
+				Sender = value;
+			
+			else if (fieldName.Equals("Sender", StringComparison.InvariantCultureIgnoreCase))
+				SenderName = stringValue;
+			
+			else if (fieldName.Equals("Subject", StringComparison.InvariantCultureIgnoreCase))
+				Theme = stringValue;
+      }
 
 		public MimeMessage CreateNativeMessage(InternetMailTextProcessing processText = InternetMailTextProcessing.Process)
 		{

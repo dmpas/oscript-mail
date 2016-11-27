@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using ScriptEngine.Machine;
 using ScriptEngine.HostedScript;
 using ScriptEngine.HostedScript.Library;
@@ -8,58 +9,6 @@ namespace TestApp
 {
 	class MainClass : IHostApplication
 	{
-
-		static readonly string SCRIPT = @"
-Процедура ОтправитьПисьмо(Знач Получатель, Знач Заголовок, Знач ТекстПисьма) Экспорт
-	
-	Профиль = Новый ИнтернетПочтовыйПрофиль;
-	
-	Профиль.АдресСервераSMTP = Сервер;
-	Профиль.Таймаут = Таймаут;
-	
-	Профиль.ПользовательSMTP = Пользователь;
-	Профиль.ПарольSMTP = Пароль;
-	Профиль.ПортSMTP = ПортSMTP;
-	Профиль.ИспользоватьSSLSMTP = ИспользоватьSSLSMTP;
-	
-	Профиль.Пользователь = Пользователь;
-	Профиль.Пароль = Пароль;
-	
-	Сообщение = Новый ИнтернетПочтовоеСообщение;
-	Сообщение.Получатели.Добавить(Получатель);
-	Сообщение.ОбратныйАдрес.Добавить(Отправитель).ОтображаемоеИмя = ""Отправителище"";
-	Сообщение.Отправитель = Сообщение.ОбратныйАдрес.Получить(0);
-	Сообщение.Тема = Заголовок;
-	Сообщение.Тексты.Добавить(ТекстПисьма, ТипТекстаПочтовогоСообщения.ПростойТекст);
-	Сообщение.Тексты.Добавить(ТекстПисьма, ТипТекстаПочтовогоСообщения.ПростойТекст);
-	
-	Почта = Новый ИнтернетПочта;
-
-	Попытка
-
-		Почта.Подключиться(Профиль, ПротоколИнтернетПочты.IMAP);
-
-	Исключение
-		Сообщить(""Ошибка подключения"");
-		Сообщить(ОписаниеОшибки());
-		Возврат;
-	КонецПопытки;
-
-	Попытка
-
-		Почта.Послать(Сообщение, ОбработкаТекстаИнтернетПочтовогоСообщения.НеОбрабатывать, ПротоколИнтернетПочты.SMTP);
-
-	Исключение
-		Сообщить(""Ошибка отправки"");
-		Сообщить(ОписаниеОшибки());
-		Возврат;
-	КонецПопытки;
-
-КонецПроцедуры
-
-ОтправитьПисьмо(""sergey.batanov@lacoste.ru"", ""Theme"", ""OneScript rockz!"");
-"
-		;
 
 		public static HostedScriptEngine StartEngine()
 		{
@@ -78,6 +27,7 @@ namespace TestApp
 			string userName = ConfigurationManager.AppSettings["userName"];
 			string password = ConfigurationManager.AppSettings["password"];
 			string replyTo = ConfigurationManager.AppSettings["replyTo"] ?? String.Format("{0}@{1}", userName, server);
+			string pop3server = ConfigurationManager.AppSettings["pop3server"] ?? server;
 
 			int portSmtp;
 			bool useSsl;
@@ -93,6 +43,7 @@ namespace TestApp
 				timeout = 30;
 
 			engine.InjectGlobalProperty("Сервер", ValueFactory.Create(server), true);
+			engine.InjectGlobalProperty("СерверPOP3", ValueFactory.Create(pop3server), true);
 			engine.InjectGlobalProperty("Пользователь", ValueFactory.Create(userName), true);
 			engine.InjectGlobalProperty("Пароль", ValueFactory.Create(password) , true);
 			engine.InjectGlobalProperty("ПортSMTP", ValueFactory.Create(portSmtp), true);
@@ -101,12 +52,29 @@ namespace TestApp
 			engine.InjectGlobalProperty("Таймаут", ValueFactory.Create(timeout), true);
 		}
 
+		public static string LoadFromAssemblyResource(string resourceName)
+		{
+			var asm = System.Reflection.Assembly.GetExecutingAssembly();
+			string codeSource;
+
+			using (Stream s = asm.GetManifestResourceStream(resourceName))
+			{
+				using (StreamReader r = new StreamReader(s))
+				{
+					codeSource = r.ReadToEnd();
+				}
+			}
+
+			return codeSource;
+		}
+
+
 		public static void Main(string[] args)
 		{
 			var engine = StartEngine();
 			InjectSettings(engine);
 
-			var script = engine.Loader.FromString(SCRIPT);
+			var script = engine.Loader.FromString(LoadFromAssemblyResource("TestApp.TestSendReceive.os"));
 			var process = engine.CreateProcess(new MainClass(), script);
 
 			var result = process.Start(); // Запускаем наш тестовый скрипт

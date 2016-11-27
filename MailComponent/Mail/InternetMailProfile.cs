@@ -90,6 +90,17 @@ namespace OneScript.InternetMail
             return 465; // 587?
         }
 
+		public int GetPop3Port()
+		{
+			if (Pop3Port != 0)
+				return Pop3Port;
+
+			if (Pop3UseSsl)
+				return 995;
+
+			return 110;
+		}
+
         [ScriptConstructor]
         public static IRuntimeContextInstance Constructor()
         {
