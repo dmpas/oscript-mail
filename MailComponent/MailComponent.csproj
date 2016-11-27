@@ -41,14 +41,14 @@
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
-    <Reference Include="MimeKit">
-      <HintPath>..\packages\MimeKit.1.8.0\lib\net45\MimeKit.dll</HintPath>
-    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Security" />
+    <Reference Include="MimeKit">
+      <HintPath>..\packages\MimeKit.1.10.0\lib\net45\MimeKit.dll</HintPath>
+    </Reference>
     <Reference Include="MailKit">
-      <HintPath>..\packages\MailKit.1.8.1\lib\net45\MailKit.dll</HintPath>
+      <HintPath>..\packages\MailKit.1.10.0\lib\net45\MailKit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
