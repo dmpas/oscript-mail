@@ -24,9 +24,11 @@ namespace NUnitTests
         }
 
         [Test]
-        public void TestAsInternalObjects()
+        public void Test_CreateProfile()
         {
-			// var profile = new Inter
+			var profile = new InternetMailProfile();
+			profile.User = "User";
+			profile.Password = "Password";
         }
 
         [Test]
