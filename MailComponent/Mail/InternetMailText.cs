@@ -24,7 +24,7 @@ namespace OneScript.InternetMail
             TextType = type;
         }
 
-        [ContextProperty("Даннве", "Data")]
+        [ContextProperty("Данные", "Data")]
         public BinaryDataContext Data
         {
             get
@@ -66,6 +66,11 @@ namespace OneScript.InternetMail
 		public TextPart CreateTextPart()
 		{
 			return new TextPart(GetMimeTextFormat()) { Text = Text };
+		}
+
+		public override string ToString()
+		{
+			return Text;
 		}
     }
 }
