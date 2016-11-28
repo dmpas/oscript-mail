@@ -19,6 +19,8 @@ namespace OneScript.InternetMail
 		int GetMessageCount();
 		void DeleteMessages(ArrayImpl dataToDelete);
 
+		ArrayImpl Get(bool deleteMessages, ArrayImpl ids, bool markAsRead);
+
 		// IMAP Only
 
 		ArrayImpl GetMailboxes();

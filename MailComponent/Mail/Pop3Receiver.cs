@@ -5,13 +5,9 @@ was not distributed with this file, You can obtain one
 at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
 using System;
-using ScriptEngine.Machine.Contexts;
 using ScriptEngine.Machine;
-using MailKit.Net.Smtp;
-using MailKit.Net.Imap;
 using MailKit.Net.Pop3;
-using MailKit.Security;
-using MimeKit;
+using System.Collections.Generic;
 using ScriptEngine.HostedScript.Library;
 
 namespace OneScript.InternetMail
@@ -71,14 +67,18 @@ namespace OneScript.InternetMail
 			return result;
 		}
 
-		public ArrayImpl GetIdentifiers(ArrayImpl identifiers, StructureImpl filter)
+		// В режиме Pop3 отбор filter игнорируется
+		public ArrayImpl GetIdentifiers(ArrayImpl identifiers = null, StructureImpl filter = null)
 		{
 			var result = new ArrayImpl();
 			var allUids = client.GetMessageUids();
 
 			foreach (var uid in allUids)
 			{
-				result.Add(ValueFactory.Create(uid));
+				var Id = ValueFactory.Create(uid);
+
+				if (identifiers == null || identifiers.Find(Id).DataType != DataType.Undefined)
+					result.Add(Id);
 			}
 
 			return result;
@@ -87,6 +87,48 @@ namespace OneScript.InternetMail
 		public int GetMessageCount()
 		{
 			return client.Count;
+		}
+
+		private bool ShouldDownload(int index, ArrayImpl ids)
+		{
+			if (ids == null)
+				return true;
+			
+			var uid = ValueFactory.Create(client.GetMessageUid(index));
+			if (ids.Find(uid).DataType != DataType.Undefined)
+				return true;
+
+			// TODO: Отработать случай, когда в массиве заголовки
+
+			return false;
+		}
+
+		public ArrayImpl Get(bool deleteMessages, ArrayImpl ids, bool markAsRead)
+		{
+
+			if (markAsRead != true)
+				throw RuntimeException.InvalidArgumentValue(); // TODO: Внятное сообщение
+
+			var result = new ArrayImpl();
+			var processedMessages = new List<int>();
+
+			for (int i = 0; i < client.Count; i++)
+			{
+				if (ShouldDownload(i, ids))
+				{
+					var mimeMessage = client.GetMessage(i);
+					var iMessage = new InternetMailMessage(mimeMessage);
+					result.Add(iMessage);
+					processedMessages.Add(i);
+				}
+			}
+
+			if (deleteMessages)
+			{
+				client.DeleteMessages(processedMessages);
+			}
+
+			return result;
 		}
 
 		#region NotSupported in POP3
@@ -135,5 +177,6 @@ namespace OneScript.InternetMail
 		{
 			Logoff();
 		}
+
 	}
 }

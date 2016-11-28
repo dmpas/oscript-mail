@@ -55,6 +55,23 @@ namespace OneScript.InternetMail
 			DateReceived = DateTime.Now;
 		}
 
+		public InternetMailMessage(MimeMessage nativeMessage): this(nativeMessage.Headers)
+		{
+			if (nativeMessage.Body is TextPart)
+			{
+				Texts.Add((nativeMessage.Body as TextPart).Text, InternetMailTextType.PlainText); // TODO: Определять тип сообщения
+			}
+			else if (nativeMessage.Body is Multipart)
+			{
+				var body = nativeMessage.Body as Multipart;
+				foreach (var part in body)
+				{
+					var tpart = part as TextPart;
+					Texts.Add(tpart.Text, InternetMailTextType.PlainText); // TODO: Определять тип сообщения
+				}
+			}
+		}
+
         [ContextProperty("АдресаУведомленияОДоставке", "DeliveryReceiptAddresses")]
         public InternetMailAddresses DeliveryReceiptAddresses { get; }
 

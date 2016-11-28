@@ -181,6 +181,12 @@ namespace OneScript.InternetMail
 			receiver?.DeleteMailbox(name);
 		}
 
+		[ContextMethod("Выбрать", "Get")]
+		public ArrayImpl Get(bool? deleteMessages = null, ArrayImpl ids = null, bool? markAsRead = null)
+		{
+			return receiver?.Get(deleteMessages ?? true, ids, markAsRead ?? true);
+		}
+
 		public void Dispose()
 		{
 			((IDisposable)smtpClient).Dispose();
