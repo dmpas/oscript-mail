@@ -73,7 +73,15 @@ namespace OneScript.InternetMail
 
 		public ArrayImpl GetIdentifiers(ArrayImpl identifiers, StructureImpl filter)
 		{
-			throw new NotImplementedException();
+			var result = new ArrayImpl();
+			var allUids = client.GetMessageUids();
+
+			foreach (var uid in allUids)
+			{
+				result.Add(ValueFactory.Create(uid));
+			}
+
+			return result;
 		}
 
 		public int GetMessageCount()
