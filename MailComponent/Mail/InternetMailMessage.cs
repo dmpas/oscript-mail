@@ -32,6 +32,7 @@ namespace OneScript.InternetMail
 			NonAsciiSymbolsEncodingMode = InternetMailMessageNonAsciiSymbolsEncodingMode.Mime;
 
 			Texts = new InternetMailTexts();
+			Uid = new ArrayImpl();
 		}
 
 		public InternetMailMessage(HeaderList headers) : this()
@@ -55,8 +56,9 @@ namespace OneScript.InternetMail
 			DateReceived = DateTime.Now;
 		}
 
-		public InternetMailMessage(MimeMessage nativeMessage) : this(nativeMessage.Headers)
+		public InternetMailMessage(MimeMessage nativeMessage, string identifier) : this(nativeMessage.Headers)
 		{
+			Uid.Add(ValueFactory.Create(identifier));
 			if (nativeMessage.Body is TextPart)
 			{
 				Texts.Add(new InternetMailText(nativeMessage.Body as TextPart));
@@ -94,7 +96,7 @@ namespace OneScript.InternetMail
 		public string Header { get; private set; }
 
 		[ContextProperty("Идентификатор", "Uid")]
-		public string Uid { get; set; }
+		public ArrayImpl Uid { get; }
 
 		[ContextProperty("ИдентификаторСообщения", "MessageId")]
 		public string MessageId { get; private set; }

@@ -132,8 +132,10 @@ namespace OneScript.InternetMail
 			return receiver?.GetMessageCount() ?? 0;
 		}
 
+		[ContextMethod("УдалитьСообщения", "DeleteMessages")]
 		public void DeleteMessages(ArrayImpl dataToDelete)
 		{
+			receiver?.DeleteMessages(dataToDelete);
 		}
 
 		public ArrayImpl GetMailboxes()

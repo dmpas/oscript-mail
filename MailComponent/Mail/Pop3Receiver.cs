@@ -43,14 +43,55 @@ namespace OneScript.InternetMail
 				client.Disconnect(true);
 		}
 
-		public void ClearDeletedMessages()
+		private IList<int> GetMessagesList(ArrayImpl ids)
 		{
-			throw new NotImplementedException();
+			var result = new List<int>();
+			if (ids == null)
+			{
+				for (int i = 0; i < client.Count; i++)
+					result.Add(i);
+			}
+			else
+			{
+				// Получим список идентификаторов писем с учётом возможных вариантов входящих данных
+				var Uids = new List<string>();
+				foreach (var data in ids)
+				{
+					if (data.DataType == DataType.String)
+					{
+						Uids.Add(data.AsString());
+					}
+					else if (data is InternetMailMessage)
+					{
+						foreach (var id in (data as InternetMailMessage).Uid)
+						{
+							Uids.Add(id.AsString());
+						}
+					}
+					else if (data is ArrayImpl)
+					{
+						foreach (var id in (data as ArrayImpl))
+						{
+							Uids.Add(id.AsString());
+						}
+					}
+				}
+
+				for (int i = 0; i < client.Count; i++)
+				{
+					var uid = client.GetMessageUid(i);
+					if (Uids.FindIndex((x) => x.Equals(uid, StringComparison.Ordinal)) != -1)
+						result.Add(i);
+				}
+			}
+
+			return result;
 		}
 
 		public void DeleteMessages(ArrayImpl dataToDelete)
 		{
-			throw new NotImplementedException();
+			var messages = GetMessagesList(dataToDelete);
+			client.DeleteMessages(messages);
 		}
 
 		public ArrayImpl GetHeaders(StructureImpl filter)
@@ -89,20 +130,6 @@ namespace OneScript.InternetMail
 			return client.Count;
 		}
 
-		private bool ShouldDownload(int index, ArrayImpl ids)
-		{
-			if (ids == null)
-				return true;
-
-			var uid = ValueFactory.Create(client.GetMessageUid(index));
-			if (ids.Find(uid).DataType != DataType.Undefined)
-				return true;
-
-			// TODO: Отработать случай, когда в массиве заголовки
-
-			return false;
-		}
-
 		public ArrayImpl Get(bool deleteMessages, ArrayImpl ids, bool markAsRead)
 		{
 
@@ -110,17 +137,13 @@ namespace OneScript.InternetMail
 				throw RuntimeException.InvalidArgumentValue(); // TODO: Внятное сообщение
 
 			var result = new ArrayImpl();
-			var processedMessages = new List<int>();
+			var processedMessages = GetMessagesList(ids);
 
-			for (int i = 0; i < client.Count; i++)
+			foreach (int i in processedMessages)
 			{
-				if (ShouldDownload(i, ids))
-				{
-					var mimeMessage = client.GetMessage(i);
-					var iMessage = new InternetMailMessage(mimeMessage);
-					result.Add(iMessage);
-					processedMessages.Add(i);
-				}
+				var mimeMessage = client.GetMessage(i);
+				var iMessage = new InternetMailMessage(mimeMessage, client.GetMessageUid(i));
+				result.Add(iMessage);
 			}
 
 			if (deleteMessages)
@@ -170,6 +193,11 @@ namespace OneScript.InternetMail
 		public ArrayImpl GetMailboxesBySubscription()
 		{
 			throw new NotSupportedInSelectedProtocol(notSupportedMessage);
+		}
+
+		public void ClearDeletedMessages()
+		{
+			throw new NotImplementedException();
 		}
 		#endregion
 
