@@ -47,7 +47,12 @@ namespace OneScript.InternetMail
             return newText;
         }
 
-        [ContextMethod("Очистить", "Clear")]
+		public void Add(InternetMailText text)
+		{
+			_data.Add(text);
+		}
+
+		[ContextMethod("Очистить", "Clear")]
         public void Clear()
         {
             _data.Clear();

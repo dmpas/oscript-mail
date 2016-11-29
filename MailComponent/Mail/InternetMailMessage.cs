@@ -59,7 +59,7 @@ namespace OneScript.InternetMail
 		{
 			if (nativeMessage.Body is TextPart)
 			{
-				Texts.Add((nativeMessage.Body as TextPart).Text, InternetMailTextType.PlainText); // TODO: Определять тип сообщения
+				Texts.Add(new InternetMailText(nativeMessage.Body as TextPart));
 			}
 			else if (nativeMessage.Body is Multipart)
 			{
@@ -67,7 +67,7 @@ namespace OneScript.InternetMail
 				foreach (var part in body)
 				{
 					var tpart = part as TextPart;
-					Texts.Add(tpart.Text, InternetMailTextType.PlainText); // TODO: Определять тип сообщения
+					Texts.Add(new InternetMailText(part as TextPart));
 				}
 			}
 		}

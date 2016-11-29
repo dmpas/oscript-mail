@@ -18,7 +18,19 @@ namespace OneScript.InternetMail
         {
         }
 
-        public InternetMailText(string text, InternetMailTextType type)
+		public InternetMailText(TextPart nativeTextPart)
+		{
+			if (nativeTextPart.IsPlain)
+				TextType = InternetMailTextType.PlainText;
+			else if (nativeTextPart.IsHtml)
+				TextType = InternetMailTextType.Html;
+			else if (nativeTextPart.IsRichText)
+				TextType = InternetMailTextType.RichText;
+
+			Text = nativeTextPart.Text;
+		}
+
+		public InternetMailText(string text, InternetMailTextType type)
         {
             Text = text;
             TextType = type;
