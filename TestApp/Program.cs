@@ -45,7 +45,7 @@ namespace TestApp
 			engine.InjectGlobalProperty("Сервер", ValueFactory.Create(server), true);
 			engine.InjectGlobalProperty("СерверPOP3", ValueFactory.Create(pop3server), true);
 			engine.InjectGlobalProperty("Пользователь", ValueFactory.Create(userName), true);
-			engine.InjectGlobalProperty("Пароль", ValueFactory.Create(password) , true);
+			engine.InjectGlobalProperty("Пароль", ValueFactory.Create(password), true);
 			engine.InjectGlobalProperty("ПортSMTP", ValueFactory.Create(portSmtp), true);
 			engine.InjectGlobalProperty("Отправитель", ValueFactory.Create(replyTo), true);
 			engine.InjectGlobalProperty("ИспользоватьSSLSMTP", ValueFactory.Create(useSsl), true);

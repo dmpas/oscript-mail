@@ -9,16 +9,16 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
-    [EnumerationType("СпособКодированияНеASCIIСимволовИнтернетПочтовогоСообщения", "InternetMailMessageNonASCIISymbolsEncodingMode")]
-    public enum InternetMailMessageNonAsciiSymbolsEncodingMode
-    {
-        [EnumItem("MIME")]
-        Mime,
+	[EnumerationType("СпособКодированияНеASCIIСимволовИнтернетПочтовогоСообщения", "InternetMailMessageNonASCIISymbolsEncodingMode")]
+	public enum InternetMailMessageNonAsciiSymbolsEncodingMode
+	{
+		[EnumItem("MIME")]
+		Mime,
 
-        [EnumItem("QuotedPrintable")]
-        QuotedPrintable,
+		[EnumItem("QuotedPrintable")]
+		QuotedPrintable,
 
-        [EnumItem("БезКодирования", "None")]
-        None
-    }
+		[EnumItem("БезКодирования", "None")]
+		None
+	}
 }

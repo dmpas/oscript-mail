@@ -10,18 +10,18 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
-    [EnumerationType("ПротоколИнтернетПочты", "InternetMailProtocol")]
-    public enum InternetMailProtocol
-    {
+	[EnumerationType("ПротоколИнтернетПочты", "InternetMailProtocol")]
+	public enum InternetMailProtocol
+	{
 
-        [EnumItem("IMAP")]
-        Imap,
+		[EnumItem("IMAP")]
+		Imap,
 
-        [EnumItem("POP3")]
-        Pop3,
+		[EnumItem("POP3")]
+		Pop3,
 
-        [EnumItem("SMTP")]
-        Smtp
+		[EnumItem("SMTP")]
+		Smtp
 
-    }
+	}
 }

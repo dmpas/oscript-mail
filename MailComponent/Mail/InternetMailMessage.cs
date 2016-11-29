@@ -13,28 +13,28 @@ using MimeKit;
 
 namespace OneScript.InternetMail
 {
-    [ContextClass("ИнтернетПочтовоеСообщение", "InternetMailMessage")]
-    public class InternetMailMessage : AutoContext<InternetMailMessage>
-    {
+	[ContextClass("ИнтернетПочтовоеСообщение", "InternetMailMessage")]
+	public class InternetMailMessage : AutoContext<InternetMailMessage>
+	{
 
 		private readonly HeaderList headers = new HeaderList();
 
-        public InternetMailMessage()
-        {
-            DeliveryReceiptAddresses = new InternetMailAddresses();
-            ReadReceiptAddresses = new InternetMailAddresses();
-            Attachments = new InternetMailAttachments();
-            Cc = new InternetMailAddresses();
-            ReplyTo = new InternetMailAddresses();
-            To = new InternetMailAddresses();
-            Bcc = new InternetMailAddresses();
+		public InternetMailMessage()
+		{
+			DeliveryReceiptAddresses = new InternetMailAddresses();
+			ReadReceiptAddresses = new InternetMailAddresses();
+			Attachments = new InternetMailAttachments();
+			Cc = new InternetMailAddresses();
+			ReplyTo = new InternetMailAddresses();
+			To = new InternetMailAddresses();
+			Bcc = new InternetMailAddresses();
 
-            NonAsciiSymbolsEncodingMode = InternetMailMessageNonAsciiSymbolsEncodingMode.Mime;
+			NonAsciiSymbolsEncodingMode = InternetMailMessageNonAsciiSymbolsEncodingMode.Mime;
 
-            Texts = new InternetMailTexts();
-        }
+			Texts = new InternetMailTexts();
+		}
 
-		public InternetMailMessage(HeaderList headers): this()
+		public InternetMailMessage(HeaderList headers) : this()
 		{
 			using (var sw = new MemoryStream())
 			{
@@ -55,7 +55,7 @@ namespace OneScript.InternetMail
 			DateReceived = DateTime.Now;
 		}
 
-		public InternetMailMessage(MimeMessage nativeMessage): this(nativeMessage.Headers)
+		public InternetMailMessage(MimeMessage nativeMessage) : this(nativeMessage.Headers)
 		{
 			if (nativeMessage.Body is TextPart)
 			{
@@ -72,121 +72,121 @@ namespace OneScript.InternetMail
 			}
 		}
 
-        [ContextProperty("АдресаУведомленияОДоставке", "DeliveryReceiptAddresses")]
-        public InternetMailAddresses DeliveryReceiptAddresses { get; }
+		[ContextProperty("АдресаУведомленияОДоставке", "DeliveryReceiptAddresses")]
+		public InternetMailAddresses DeliveryReceiptAddresses { get; }
 
-        [ContextProperty("АдресаУведомленияОПрочтении", "ReadReceiptAddresses")]
-        public InternetMailAddresses ReadReceiptAddresses { get; }
+		[ContextProperty("АдресаУведомленияОПрочтении", "ReadReceiptAddresses")]
+		public InternetMailAddresses ReadReceiptAddresses { get; }
 
-        [ContextProperty("Важность", "Importance")]
-        public InternetMailMessageImportance Importance { get; set; }
+		[ContextProperty("Важность", "Importance")]
+		public InternetMailMessageImportance Importance { get; set; }
 
-        [ContextProperty("Вложения", "Attachments")]
-        public InternetMailAttachments Attachments { get; }
+		[ContextProperty("Вложения", "Attachments")]
+		public InternetMailAttachments Attachments { get; }
 
-        [ContextProperty("ДатаОтправления", "PostingDate")]
-        public DateTime PostingDate { get; private set; }
+		[ContextProperty("ДатаОтправления", "PostingDate")]
+		public DateTime PostingDate { get; private set; }
 
-        [ContextProperty("ДатаПолучения", "DateReceived")]
-        public DateTime DateReceived { get; private set; }
+		[ContextProperty("ДатаПолучения", "DateReceived")]
+		public DateTime DateReceived { get; private set; }
 
-        [ContextProperty("Заголовок", "Header")]
-        public string Header { get; private set; }
+		[ContextProperty("Заголовок", "Header")]
+		public string Header { get; private set; }
 
-        [ContextProperty("Идентификатор", "Uid")]
-        public string Uid { get; set; }
+		[ContextProperty("Идентификатор", "Uid")]
+		public string Uid { get; set; }
 
-        [ContextProperty("ИдентификаторСообщения", "MessageId")]
-        public string MessageId { get; private set; }
+		[ContextProperty("ИдентификаторСообщения", "MessageId")]
+		public string MessageId { get; private set; }
 
-        [ContextProperty("ИмяОтправителя", "SenderName")]
-        public string SenderName { get; set; }
+		[ContextProperty("ИмяОтправителя", "SenderName")]
+		public string SenderName { get; set; }
 
-        [ContextProperty("Категории", "Categories")]
-        public string Categories { get; set; }
+		[ContextProperty("Категории", "Categories")]
+		public string Categories { get; set; }
 
-        [ContextProperty("Кодировка", "Encoding")]
-        public string Encoding { get; set; }
+		[ContextProperty("Кодировка", "Encoding")]
+		public string Encoding { get; set; }
 
-        [ContextProperty("Копии", "Cc")]
-        public InternetMailAddresses Cc { get; }
+		[ContextProperty("Копии", "Cc")]
+		public InternetMailAddresses Cc { get; }
 
-        [ContextProperty("ОбратныйАдрес", "ReplyTo")]
-        public InternetMailAddresses ReplyTo { get; }
+		[ContextProperty("ОбратныйАдрес", "ReplyTo")]
+		public InternetMailAddresses ReplyTo { get; }
 
-        [ContextProperty("Организация", "Organization")]
-        public string Organization { get; }
+		[ContextProperty("Организация", "Organization")]
+		public string Organization { get; }
 
-        [ContextProperty("Отправитель", "Sender")]
-        public IValue Sender { get; set; }
+		[ContextProperty("Отправитель", "Sender")]
+		public IValue Sender { get; set; }
 
-        [ContextProperty("Получатели", "To")]
-        public InternetMailAddresses To { get; }
+		[ContextProperty("Получатели", "To")]
+		public InternetMailAddresses To { get; }
 
-        [ContextProperty("Размер", "Size")]
-        public int Size { get; }
+		[ContextProperty("Размер", "Size")]
+		public int Size { get; }
 
-        [ContextProperty("СлепыеКопии", "Bcc")]
-        public InternetMailAddresses Bcc { get; }
+		[ContextProperty("СлепыеКопии", "Bcc")]
+		public InternetMailAddresses Bcc { get; }
 
-        [ContextProperty("СмещениеДатыОтправления", "PostingDateOffset")]
+		[ContextProperty("СмещениеДатыОтправления", "PostingDateOffset")]
 		public decimal PostingDateOffset { get; private set; }
 
-        [ContextProperty("СпособКодированияНеASCIIСимволов", "NonAsciiSymbolsEncodingMode")]
-        public InternetMailMessageNonAsciiSymbolsEncodingMode NonAsciiSymbolsEncodingMode { get; set; }
+		[ContextProperty("СпособКодированияНеASCIIСимволов", "NonAsciiSymbolsEncodingMode")]
+		public InternetMailMessageNonAsciiSymbolsEncodingMode NonAsciiSymbolsEncodingMode { get; set; }
 
-        [ContextProperty("СтатусРазбора", "ParseStatus")]
-        public InternetMailMessageParseStatus ParseStatus { get; }
+		[ContextProperty("СтатусРазбора", "ParseStatus")]
+		public InternetMailMessageParseStatus ParseStatus { get; }
 
-        [ContextProperty("Тексты", "Texts")]
-        public InternetMailTexts Texts { get; }
+		[ContextProperty("Тексты", "Texts")]
+		public InternetMailTexts Texts { get; }
 
-        [ContextProperty("Тема", "Theme")]
-        public string Theme { get; set; }
+		[ContextProperty("Тема", "Theme")]
+		public string Theme { get; set; }
 
-        [ContextProperty("УведомитьОДоставке", "RequestDeliveryReceipt")]
-        public bool RequestDeliveryReceipt { get; set; }
+		[ContextProperty("УведомитьОДоставке", "RequestDeliveryReceipt")]
+		public bool RequestDeliveryReceipt { get; set; }
 
-        [ContextProperty("УведомитьОПрочтении", "RequestReadReceipt")]
-        public bool RequestReadReceipt { get; }
+		[ContextProperty("УведомитьОПрочтении", "RequestReadReceipt")]
+		public bool RequestReadReceipt { get; }
 
-        [ContextProperty("Частичное", "Partial")]
-        public bool Partial { get; }
+		[ContextProperty("Частичное", "Partial")]
+		public bool Partial { get; }
 
-        [ContextMethod("ОбработатьТексты", "ProcessTexts")]
-        public void ProcessTexts()
-        {
-        }
+		[ContextMethod("ОбработатьТексты", "ProcessTexts")]
+		public void ProcessTexts()
+		{
+		}
 
-        [ContextMethod("ПолучитьИсходныеДанные", "GetSourceData")]
-        public BinaryDataContext GetSourceData()
-        {
-            return null;
-        }
+		[ContextMethod("ПолучитьИсходныеДанные", "GetSourceData")]
+		public BinaryDataContext GetSourceData()
+		{
+			return null;
+		}
 
-        [ContextMethod("ПолучитьИсходныйТекст", "GetSourceText")]
-        public string GetSourceText(IValue encoding)
-        {
-            return "";
-        }
+		[ContextMethod("ПолучитьИсходныйТекст", "GetSourceText")]
+		public string GetSourceText(IValue encoding)
+		{
+			return "";
+		}
 
-        [ContextMethod("ПолучитьПолеЗаголовка", "GetField")]
-        public IValue GetField(string fieldName, IValue type)
-        {
+		[ContextMethod("ПолучитьПолеЗаголовка", "GetField")]
+		public IValue GetField(string fieldName, IValue type)
+		{
 			var value = headers[fieldName];
-            return ValueFactory.Create(value);
-        }
+			return ValueFactory.Create(value);
+		}
 
-        [ContextMethod("УстановитьИсходныеДанные", "SetSourceData")]
-        public void SetSourceData(BinaryDataContext data)
-        {
-        }
+		[ContextMethod("УстановитьИсходныеДанные", "SetSourceData")]
+		public void SetSourceData(BinaryDataContext data)
+		{
+		}
 
-        [ContextMethod("УстановитьПолеЗаголовка", "SetField")]
-        public void SetField(string fieldName, IValue value, InternetMailMessageNonAsciiSymbolsEncodingMode? encodingMode = null)
-        {
-            if (encodingMode == null)
-                encodingMode = NonAsciiSymbolsEncodingMode;
+		[ContextMethod("УстановитьПолеЗаголовка", "SetField")]
+		public void SetField(string fieldName, IValue value, InternetMailMessageNonAsciiSymbolsEncodingMode? encodingMode = null)
+		{
+			if (encodingMode == null)
+				encodingMode = NonAsciiSymbolsEncodingMode;
 
 			var stringValue = value.AsString();
 
@@ -208,13 +208,13 @@ namespace OneScript.InternetMail
 			}
 			else if (fieldName.Equals("From", StringComparison.InvariantCultureIgnoreCase))
 				Sender = value;
-			
+
 			else if (fieldName.Equals("Sender", StringComparison.InvariantCultureIgnoreCase))
 				SenderName = stringValue;
-			
+
 			else if (fieldName.Equals("Subject", StringComparison.InvariantCultureIgnoreCase))
 				Theme = stringValue;
-      }
+		}
 
 		public MimeMessage CreateNativeMessage(InternetMailTextProcessing processText = InternetMailTextProcessing.Process)
 		{
@@ -259,10 +259,10 @@ namespace OneScript.InternetMail
 			return messageToSend;
 		}
 
-        [ScriptConstructor]
-        public static IRuntimeContextInstance Constructor()
-        {
-            return new InternetMailMessage();
-        }
-    }
+		[ScriptConstructor]
+		public static IRuntimeContextInstance Constructor()
+		{
+			return new InternetMailMessage();
+		}
+	}
 }

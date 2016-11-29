@@ -11,12 +11,12 @@ using MimeKit;
 
 namespace OneScript.InternetMail
 {
-    [ContextClass("ИнтернетТекстПочтовогоСообщения", "InternetMailText")]
-    public class InternetMailText : AutoContext<InternetMailText>
-    {
-        public InternetMailText()
-        {
-        }
+	[ContextClass("ИнтернетТекстПочтовогоСообщения", "InternetMailText")]
+	public class InternetMailText : AutoContext<InternetMailText>
+	{
+		public InternetMailText()
+		{
+		}
 
 		public InternetMailText(TextPart nativeTextPart)
 		{
@@ -31,38 +31,38 @@ namespace OneScript.InternetMail
 		}
 
 		public InternetMailText(string text, InternetMailTextType type)
-        {
-            Text = text;
-            TextType = type;
-        }
+		{
+			Text = text;
+			TextType = type;
+		}
 
-        [ContextProperty("Данные", "Data")]
-        public BinaryDataContext Data
-        {
-            get
-            {
-                var encoding = GetEncoding();
-                return new BinaryDataContext(encoding.GetBytes(Text));
-            }
-        }
+		[ContextProperty("Данные", "Data")]
+		public BinaryDataContext Data
+		{
+			get
+			{
+				var encoding = GetEncoding();
+				return new BinaryDataContext(encoding.GetBytes(Text));
+			}
+		}
 
-        [ContextProperty("Кодировка", "Encoding")]
-        public string Encoding { get; set; }
+		[ContextProperty("Кодировка", "Encoding")]
+		public string Encoding { get; set; }
 
-        [ContextProperty("Текст", "Text")]
-        public string Text { get; set; }
+		[ContextProperty("Текст", "Text")]
+		public string Text { get; set; }
 
-        [ContextProperty("ТипТекста", "TextType")]
-        public InternetMailTextType TextType { get; set; }
+		[ContextProperty("ТипТекста", "TextType")]
+		public InternetMailTextType TextType { get; set; }
 
 
-        private System.Text.Encoding GetEncoding()
-        {
-            if (Encoding.Length == 0)
-                return new System.Text.UTF8Encoding(false);
-            
-            return System.Text.Encoding.GetEncoding(Encoding);
-        }
+		private System.Text.Encoding GetEncoding()
+		{
+			if (Encoding.Length == 0)
+				return new System.Text.UTF8Encoding(false);
+
+			return System.Text.Encoding.GetEncoding(Encoding);
+		}
 
 		private MimeKit.Text.TextFormat GetMimeTextFormat()
 		{
@@ -71,7 +71,7 @@ namespace OneScript.InternetMail
 
 			if (TextType == InternetMailTextType.RichText)
 				return MimeKit.Text.TextFormat.RichText;
-			
+
 			return MimeKit.Text.TextFormat.Plain;
 		}
 
@@ -84,5 +84,5 @@ namespace OneScript.InternetMail
 		{
 			return Text;
 		}
-    }
+	}
 }

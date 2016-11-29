@@ -10,16 +10,16 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
-    [EnumerationType("ТипТекстаПочтовогоСообщения", "InternetMailTextType")]
-    public enum InternetMailTextType
-    {
-        [EnumItem("HTML")]
-        Html,
+	[EnumerationType("ТипТекстаПочтовогоСообщения", "InternetMailTextType")]
+	public enum InternetMailTextType
+	{
+		[EnumItem("HTML")]
+		Html,
 
-        [EnumItem("ПростойТекст", "PlainText")]
-        PlainText,
+		[EnumItem("ПростойТекст", "PlainText")]
+		PlainText,
 
-        [EnumItem("РазмеченныйТекст", "RichText")]
-        RichText
-    }
+		[EnumItem("РазмеченныйТекст", "RichText")]
+		RichText
+	}
 }

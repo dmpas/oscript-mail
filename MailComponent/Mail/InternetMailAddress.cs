@@ -11,39 +11,39 @@ using MimeKit;
 
 namespace OneScript.InternetMail
 {
-    [ContextClass("ИнтернетПочтовыйАдрес", "InternetMailAddress")]
-    public class InternetMailAddress : AutoContext<InternetMailAddress>
-    {
-        [ContextProperty("Адрес", "Address")]
-        public string Address
-        {
-            get
-            {
-                return String.Format("{0}@{1}", User, Server);
-            }
-            set
-            {
+	[ContextClass("ИнтернетПочтовыйАдрес", "InternetMailAddress")]
+	public class InternetMailAddress : AutoContext<InternetMailAddress>
+	{
+		[ContextProperty("Адрес", "Address")]
+		public string Address
+		{
+			get
+			{
+				return String.Format("{0}@{1}", User, Server);
+			}
+			set
+			{
 				var address = new MailAddress(value);
 				User = address.User;
 				Server = address.Host;
-            }
-        }
+			}
+		}
 
-        [ContextProperty("Кодировка", "Encoding")]
-        public string Encoding { get; set; }
+		[ContextProperty("Кодировка", "Encoding")]
+		public string Encoding { get; set; }
 
-        [ContextProperty("ОтображаемоеИмя", "DisplayName")]
-        public string DisplayName { get; set; }
+		[ContextProperty("ОтображаемоеИмя", "DisplayName")]
+		public string DisplayName { get; set; }
 
-        [ContextProperty("Пользователь", "User")]
-        public string User { get; set; }
+		[ContextProperty("Пользователь", "User")]
+		public string User { get; set; }
 
-        [ContextProperty("Сервер", "Server")]
-        public string Server { get; set; }
+		[ContextProperty("Сервер", "Server")]
+		public string Server { get; set; }
 
-        public MailboxAddress GetInternalObject()
-        {
+		public MailboxAddress GetInternalObject()
+		{
 			return new MailboxAddress(System.Text.Encoding.GetEncoding(Encoding ?? "UTF-8"), DisplayName, Address);
-        }
-    }
+		}
+	}
 }

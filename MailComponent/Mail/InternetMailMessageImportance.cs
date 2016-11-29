@@ -10,22 +10,22 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
-    [EnumerationType("ВажностьИнтернетПочтовогоСообщения", "InternetMailMessageImportance")]
-    public enum InternetMailMessageImportance
-    {
-        [EnumItem("Высокая", "High")]
-        High,
+	[EnumerationType("ВажностьИнтернетПочтовогоСообщения", "InternetMailMessageImportance")]
+	public enum InternetMailMessageImportance
+	{
+		[EnumItem("Высокая", "High")]
+		High,
 
-        [EnumItem("Наивысшая", "Highest")]
-        Highest,
+		[EnumItem("Наивысшая", "Highest")]
+		Highest,
 
-        [EnumItem("Наименьшая", "Lowest")]
-        Lowest,
+		[EnumItem("Наименьшая", "Lowest")]
+		Lowest,
 
-        [EnumItem("Низкая", "Low")]
-        Low,
+		[EnumItem("Низкая", "Low")]
+		Low,
 
-        [EnumItem("Обычная", "Normal")]
-        Normal
-    }
+		[EnumItem("Обычная", "Normal")]
+		Normal
+	}
 }

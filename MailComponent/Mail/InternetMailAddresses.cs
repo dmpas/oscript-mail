@@ -12,65 +12,65 @@ using System.Collections;
 
 namespace OneScript.InternetMail
 {
-    [ContextClass("ИнтернетПочтовыеАдреса", "InternetMailAddresses")]
-    public class InternetMailAddresses : AutoContext<InternetMailAddresses>, ICollectionContext, IEnumerable<InternetMailAddress>
-    {
+	[ContextClass("ИнтернетПочтовыеАдреса", "InternetMailAddresses")]
+	public class InternetMailAddresses : AutoContext<InternetMailAddresses>, ICollectionContext, IEnumerable<InternetMailAddress>
+	{
 
-        private readonly List<InternetMailAddress> _data = new List<InternetMailAddress>();
+		private readonly List<InternetMailAddress> _data = new List<InternetMailAddress>();
 
-        public IEnumerator<InternetMailAddress> GetEnumerator()
-        {
-            return _data.GetEnumerator();
-        }
+		public IEnumerator<InternetMailAddress> GetEnumerator()
+		{
+			return _data.GetEnumerator();
+		}
 
-        public CollectionEnumerator GetManagedIterator()
-        {
-            return new CollectionEnumerator(GetEnumerator());
-        }
+		public CollectionEnumerator GetManagedIterator()
+		{
+			return new CollectionEnumerator(GetEnumerator());
+		}
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
 
-        [ContextMethod("Добавить", "Add")]
-        public InternetMailAddress Add(string address)
-        {
-            var newAddress = new InternetMailAddress();
-            newAddress.Address = address;
-            _data.Add(newAddress);
+		[ContextMethod("Добавить", "Add")]
+		public InternetMailAddress Add(string address)
+		{
+			var newAddress = new InternetMailAddress();
+			newAddress.Address = address;
+			_data.Add(newAddress);
 
-            return newAddress;
-        }
+			return newAddress;
+		}
 
-        [ContextMethod("Количество", "Count")]
-        public int Count()
-        {
-            return _data.Count;
-        }
+		[ContextMethod("Количество", "Count")]
+		public int Count()
+		{
+			return _data.Count;
+		}
 
-        [ContextMethod("Очистить", "Clear")]
-        public void Clear()
-        {
-            _data.Clear();
-        }
+		[ContextMethod("Очистить", "Clear")]
+		public void Clear()
+		{
+			_data.Clear();
+		}
 
-        [ContextMethod("Получить", "Get")]
-        public InternetMailAddress Get(int index)
-        {
-            return _data[index];
-        }
+		[ContextMethod("Получить", "Get")]
+		public InternetMailAddress Get(int index)
+		{
+			return _data[index];
+		}
 
-        [ContextMethod("Удалить", "Delete")]
-        public void Delete(IValue element)
-        {
-            if (element.DataType == DataType.Number)
-                _data.RemoveAt((int)element.AsNumber());
-            
-            else if (element is InternetMailAddress)
-                _data.Remove(element as InternetMailAddress);
-            
-            throw RuntimeException.InvalidArgumentType(nameof(element));
-        }
-    }
+		[ContextMethod("Удалить", "Delete")]
+		public void Delete(IValue element)
+		{
+			if (element.DataType == DataType.Number)
+				_data.RemoveAt((int)element.AsNumber());
+
+			else if (element is InternetMailAddress)
+				_data.Remove(element as InternetMailAddress);
+
+			throw RuntimeException.InvalidArgumentType(nameof(element));
+		}
+	}
 }

@@ -10,15 +10,15 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
-    [EnumerationType("СпособКодированияИнтернетПочтовогоСообщения", "InternetMailAttachmentEncodingMode")]
-    public enum InternetMailAttachmentEncodingMode
-    {
+	[EnumerationType("СпособКодированияИнтернетПочтовогоСообщения", "InternetMailAttachmentEncodingMode")]
+	public enum InternetMailAttachmentEncodingMode
+	{
 
-        [EnumItem("MIME")]
-        Mime,
+		[EnumItem("MIME")]
+		Mime,
 
-        [EnumItem("UUEncode")]
-        Uuencode
+		[EnumItem("UUEncode")]
+		Uuencode
 
-    }
+	}
 }

@@ -93,7 +93,7 @@ namespace OneScript.InternetMail
 		{
 			if (ids == null)
 				return true;
-			
+
 			var uid = ValueFactory.Create(client.GetMessageUid(index));
 			if (ids.Find(uid).DataType != DataType.Undefined)
 				return true;

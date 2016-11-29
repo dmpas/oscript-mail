@@ -10,31 +10,31 @@ using OneScript.InternetMail;
 
 namespace NUnitTests
 {
-    [TestFixture]
-    public class MainTestClass
-    {
+	[TestFixture]
+	public class MainTestClass
+	{
 
-        private EngineHelpWrapper host;
+		private EngineHelpWrapper host;
 
-        [OneTimeSetUp]
-        public void Initialize()
-        {
-            host = new EngineHelpWrapper();
-            host.StartEngine();
-        }
+		[OneTimeSetUp]
+		public void Initialize()
+		{
+			host = new EngineHelpWrapper();
+			host.StartEngine();
+		}
 
-        [Test]
-        public void Test_CreateProfile()
-        {
+		[Test]
+		public void Test_CreateProfile()
+		{
 			var profile = new InternetMailProfile();
 			profile.User = "User";
 			profile.Password = "Password";
-        }
+		}
 
-        [Test]
-        public void TestAsExternalObjects()
-        {
-            host.RunTestScript("NUnitTests.Tests.external.os");
-        }
-    }
+		[Test]
+		public void TestAsExternalObjects()
+		{
+			host.RunTestScript("NUnitTests.Tests.external.os");
+		}
+	}
 }

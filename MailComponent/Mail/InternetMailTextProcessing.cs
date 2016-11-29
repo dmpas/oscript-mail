@@ -10,13 +10,13 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
-    [EnumerationType("ОбработкаТекстаИнтернетПочтовогоСообщения", "InternetMailTextProcessing")]
-    public enum InternetMailTextProcessing
-    {
-        [EnumItem("НеОбрабатывать", "DontProcess")]
-        DontProcess,
+	[EnumerationType("ОбработкаТекстаИнтернетПочтовогоСообщения", "InternetMailTextProcessing")]
+	public enum InternetMailTextProcessing
+	{
+		[EnumItem("НеОбрабатывать", "DontProcess")]
+		DontProcess,
 
-        [EnumItem("Обрабатывать", "Process")]
-        Process
-    }
+		[EnumItem("Обрабатывать", "Process")]
+		Process
+	}
 }

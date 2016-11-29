@@ -10,13 +10,13 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
-    [EnumerationType("СтатусРазбораПочтовогоСообщения", "InternetMailMessageParseStatus")]
-    public enum InternetMailMessageParseStatus
-    {
-        [EnumItem("ОбнаруженыОшибки", "ErrorsDetected")]
-        ErrorsDetected,
+	[EnumerationType("СтатусРазбораПочтовогоСообщения", "InternetMailMessageParseStatus")]
+	public enum InternetMailMessageParseStatus
+	{
+		[EnumItem("ОбнаруженыОшибки", "ErrorsDetected")]
+		ErrorsDetected,
 
-        [EnumItem("ОшибокНеОбнаружено", "ErrorsNotDetected")]
-        ErrorsNotDetected
-    }
+		[EnumItem("ОшибокНеОбнаружено", "ErrorsNotDetected")]
+		ErrorsNotDetected
+	}
 }

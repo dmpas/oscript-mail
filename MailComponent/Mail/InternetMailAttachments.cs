@@ -13,98 +13,98 @@ using ScriptEngine.HostedScript.Library;
 
 namespace OneScript.InternetMail
 {
-    [ContextClass("ИнтернетПочтовыеВложения", "InternetMailAttachments")]
-    public class InternetMailAttachments : AutoContext<InternetMailAttachments>, ICollectionContext, IEnumerable<InternetMailAttachment>
-    {
-        public InternetMailAttachments()
-        {
-        }
+	[ContextClass("ИнтернетПочтовыеВложения", "InternetMailAttachments")]
+	public class InternetMailAttachments : AutoContext<InternetMailAttachments>, ICollectionContext, IEnumerable<InternetMailAttachment>
+	{
+		public InternetMailAttachments()
+		{
+		}
 
-        private readonly List<InternetMailAttachment> _data = new List<InternetMailAttachment>();
+		private readonly List<InternetMailAttachment> _data = new List<InternetMailAttachment>();
 
-        [ContextMethod("Количество", "Count")]
-        public int Count()
-        {
-            return _data.Count;
-        }
+		[ContextMethod("Количество", "Count")]
+		public int Count()
+		{
+			return _data.Count;
+		}
 
-        public IEnumerator<InternetMailAttachment> GetEnumerator()
-        {
-            return _data.GetEnumerator();
-        }
+		public IEnumerator<InternetMailAttachment> GetEnumerator()
+		{
+			return _data.GetEnumerator();
+		}
 
-        public CollectionEnumerator GetManagedIterator()
-        {
-            return new CollectionEnumerator(GetEnumerator());
-        }
+		public CollectionEnumerator GetManagedIterator()
+		{
+			return new CollectionEnumerator(GetEnumerator());
+		}
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
 
-        public InternetMailAttachment Add(string filePath, string attachmentName = "")
-        {
-            var attachment = new InternetMailAttachment(filePath);
-            attachment.Name = attachmentName;
-            _data.Add(attachment);
-            return attachment;
-        }
+		public InternetMailAttachment Add(string filePath, string attachmentName = "")
+		{
+			var attachment = new InternetMailAttachment(filePath);
+			attachment.Name = attachmentName;
+			_data.Add(attachment);
+			return attachment;
+		}
 
-        public InternetMailAttachment Add(BinaryDataContext data, string attachmentName = "")
-        {
-            var attachment = new InternetMailAttachment();
-            attachment.Data = data;
-            attachment.Name = attachmentName;
-            _data.Add(attachment);
-            return attachment;
-        }
+		public InternetMailAttachment Add(BinaryDataContext data, string attachmentName = "")
+		{
+			var attachment = new InternetMailAttachment();
+			attachment.Data = data;
+			attachment.Name = attachmentName;
+			_data.Add(attachment);
+			return attachment;
+		}
 
-        public InternetMailAttachment Add(InternetMailMessage data, string attachmentName = "")
-        {
-            var attachment = new InternetMailAttachment();
-            attachment.Data = data;
-            attachment.Name = attachmentName;
-            _data.Add(attachment);
-            return attachment;
-        }
+		public InternetMailAttachment Add(InternetMailMessage data, string attachmentName = "")
+		{
+			var attachment = new InternetMailAttachment();
+			attachment.Data = data;
+			attachment.Name = attachmentName;
+			_data.Add(attachment);
+			return attachment;
+		}
 
 
-        [ContextMethod("Добавить", "Add")]
-        public InternetMailAttachment Add(IValue source, string attachmentName = "")
-        {
-            if (source.DataType == DataType.String)
-                return Add(source.AsString(), attachmentName);
-            else if (source is BinaryDataContext)
-                return Add(source as BinaryDataContext, attachmentName);
-            else if (source is InternetMailMessage)
-                return Add(source as InternetMailMessage, attachmentName);
+		[ContextMethod("Добавить", "Add")]
+		public InternetMailAttachment Add(IValue source, string attachmentName = "")
+		{
+			if (source.DataType == DataType.String)
+				return Add(source.AsString(), attachmentName);
+			else if (source is BinaryDataContext)
+				return Add(source as BinaryDataContext, attachmentName);
+			else if (source is InternetMailMessage)
+				return Add(source as InternetMailMessage, attachmentName);
 
-            throw RuntimeException.InvalidArgumentType(nameof(source));
-        }
+			throw RuntimeException.InvalidArgumentType(nameof(source));
+		}
 
-        [ContextMethod("Очистить", "Clear")]
-        public void Clear()
-        {
-            _data.Clear();
-        }
+		[ContextMethod("Очистить", "Clear")]
+		public void Clear()
+		{
+			_data.Clear();
+		}
 
-        [ContextMethod("Получить", "Get")]
-        public InternetMailAttachment Get(int index)
-        {
-            return _data[index];
-        }
+		[ContextMethod("Получить", "Get")]
+		public InternetMailAttachment Get(int index)
+		{
+			return _data[index];
+		}
 
-        [ContextMethod("Удалить", "Delete")]
-        public void Delete(IValue element)
-        {
-            if (element.DataType == DataType.Number)
-                _data.RemoveAt((int)element.AsNumber());
+		[ContextMethod("Удалить", "Delete")]
+		public void Delete(IValue element)
+		{
+			if (element.DataType == DataType.Number)
+				_data.RemoveAt((int)element.AsNumber());
 
-            else if (element is InternetMailAttachment)
-                _data.Remove(element as InternetMailAttachment);
+			else if (element is InternetMailAttachment)
+				_data.Remove(element as InternetMailAttachment);
 
-            throw RuntimeException.InvalidArgumentType(nameof(element));
-        }
-    }
+			throw RuntimeException.InvalidArgumentType(nameof(element));
+		}
+	}
 }
