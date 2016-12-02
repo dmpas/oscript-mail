@@ -68,8 +68,25 @@ namespace OneScript.InternetMail
 				var body = nativeMessage.Body as Multipart;
 				foreach (var part in body)
 				{
-					var tpart = part as TextPart;
-					Texts.Add(new InternetMailText(part as TextPart));
+					if (part is TextPart)
+					{
+						var tpart = part as TextPart;
+						Texts.Add(new InternetMailText(tpart));
+					}
+					else if (part is MessageDeliveryStatus)
+					{
+						// TODO: MessageDeliveryStatus
+					}
+					else if (part is MessagePart)
+					{
+						// Письмо во вложении
+						// TODO: MessagePart
+					}
+					else
+					{
+						// Console.Write("Unchecked type: ");
+						// Console.WriteLine(part.GetType());
+					}
 				}
 			}
 		}

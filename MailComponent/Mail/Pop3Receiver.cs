@@ -17,6 +17,7 @@ namespace OneScript.InternetMail
 
 		private readonly Pop3Client client = new Pop3Client();
 		private readonly string notSupportedMessage = "Операция невыполнима в текущем протоколе";
+		private InternetMailProfile _profile;
 
 		public Pop3Receiver()
 		{
@@ -30,6 +31,8 @@ namespace OneScript.InternetMail
 
 		public void Logon(InternetMailProfile profile)
 		{
+			_profile = profile;
+
 			client.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
 			client.Connect(profile.Pop3ServerAddress, profile.GetPop3Port());
 
@@ -41,6 +44,12 @@ namespace OneScript.InternetMail
 		{
 			if (client.IsConnected)
 				client.Disconnect(true);
+		}
+
+		private void Relogon()
+		{
+			Logoff();
+			Logon(_profile);
 		}
 
 		private IList<int> GetMessagesList(ArrayImpl ids)
@@ -91,18 +100,26 @@ namespace OneScript.InternetMail
 		public void DeleteMessages(ArrayImpl dataToDelete)
 		{
 			var messages = GetMessagesList(dataToDelete);
-			client.DeleteMessages(messages);
+			if (messages.Count > 0)
+			{
+				client.DeleteMessages(messages);
+				Relogon(); // TODO: костыль. Подумать, почему падает без переподключения
+			}
 		}
 
 		public ArrayImpl GetHeaders(StructureImpl filter)
 		{
 			var result = new ArrayImpl();
-			var allHeaders = client.GetMessageHeaders(0, client.Count);
 
-			foreach (var headers in allHeaders)
+			if (client.Count > 0)
 			{
-				var mailMessage = new InternetMailMessage(headers);
-				result.Add(mailMessage);
+				var allHeaders = client.GetMessageHeaders(0, client.Count);
+
+				foreach (var headers in allHeaders)
+				{
+					var mailMessage = new InternetMailMessage(headers);
+					result.Add(mailMessage);
+				}
 			}
 
 			return result;
@@ -146,7 +163,7 @@ namespace OneScript.InternetMail
 				result.Add(iMessage);
 			}
 
-			if (deleteMessages)
+			if (deleteMessages && processedMessages.Count > 0)
 			{
 				client.DeleteMessages(processedMessages);
 			}
