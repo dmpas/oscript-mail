@@ -101,6 +101,17 @@ namespace OneScript.InternetMail
 			return 110;
 		}
 
+		public int GetImapPort()
+		{
+			if (ImapPort != 0)
+				return ImapPort;
+
+			if (ImapUseSsl)
+				return 993;
+
+			return 143;
+		}
+
 		[ScriptConstructor]
 		public static IRuntimeContextInstance Constructor()
 		{

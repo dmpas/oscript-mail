@@ -28,6 +28,7 @@ namespace TestApp
 			string password = ConfigurationManager.AppSettings["password"];
 			string replyTo = ConfigurationManager.AppSettings["replyTo"] ?? String.Format("{0}@{1}", userName, server);
 			string pop3server = ConfigurationManager.AppSettings["pop3server"] ?? server;
+			string imapserver = ConfigurationManager.AppSettings["imapserver"] ?? server;
 
 			int portSmtp;
 			bool useSsl;
@@ -44,11 +45,14 @@ namespace TestApp
 
 			engine.InjectGlobalProperty("Сервер", ValueFactory.Create(server), true);
 			engine.InjectGlobalProperty("СерверPOP3", ValueFactory.Create(pop3server), true);
+			engine.InjectGlobalProperty("СерверIMAP", ValueFactory.Create(imapserver), true);
 			engine.InjectGlobalProperty("Пользователь", ValueFactory.Create(userName), true);
 			engine.InjectGlobalProperty("Пароль", ValueFactory.Create(password), true);
 			engine.InjectGlobalProperty("ПортSMTP", ValueFactory.Create(portSmtp), true);
 			engine.InjectGlobalProperty("Отправитель", ValueFactory.Create(replyTo), true);
 			engine.InjectGlobalProperty("ИспользоватьSSLSMTP", ValueFactory.Create(useSsl), true);
+			engine.InjectGlobalProperty("ИспользоватьSSLPOP3", ValueFactory.Create(useSsl), true);
+			engine.InjectGlobalProperty("ИспользоватьSSLIMAP", ValueFactory.Create(useSsl), true);
 			engine.InjectGlobalProperty("Таймаут", ValueFactory.Create(timeout), true);
 		}
 

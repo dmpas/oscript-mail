@@ -14,23 +14,47 @@ using MimeKit;
 
 namespace OneScript.InternetMail
 {
-    [ContextClass("ИнтернетПочта", "InternetMail")]
+	[ContextClass("ИнтернетПочта", "InternetMail")]
 	public class InternetMail : AutoContext<InternetMail>, IDisposable
-    {
-        private InternetMailProfile _profile;
+	{
+		private InternetMailProfile _profile;
 
 		private SmtpClient smtpClient = new SmtpClient();
 		private IMailReceiver receiver;
+		private string _currentMailbox = "";
+		private string _mailboxDelimiterCharacter = "";
 
-        public InternetMail()
-        {
-        }
+		public InternetMail()
+		{
+		}
 
-        [ContextProperty("СимволРазделитель", "DelimiterChar")]
-        public string DelimiterChar { get; set; }
+		[ContextProperty("СимволРазделитель", "DelimiterChar")]
+		public string DelimiterChar
+		{
+			get
+			{
+				return _mailboxDelimiterCharacter;
+			}
+			set
+			{
+				_mailboxDelimiterCharacter = value;
+				(receiver as ImapReceiver)?.SetDelimiterCharacter(_mailboxDelimiterCharacter);
+			}
+		}
 
-        [ContextProperty("ТекущийПочтовыйЯщик", "CurrentMailbox")]
-        public string CurrentMailbox { get; set; }
+		[ContextProperty("ТекущийПочтовыйЯщик", "CurrentMailbox")]
+		public string CurrentMailbox
+		{
+			get
+			{
+				return _currentMailbox;
+			}
+			set
+			{
+				_currentMailbox = value;
+				(receiver as ImapReceiver)?.SetCurrentMailbox(_currentMailbox);
+			}
+		}
 
 		#region SMTP
 
@@ -53,10 +77,10 @@ namespace OneScript.InternetMail
 
 		#endregion
 
-        [ContextMethod("Подключиться", "Logon")]
-        public void Logon(InternetMailProfile profile, InternetMailProtocol receiveMailProtocol = InternetMailProtocol.Pop3)
-        {
-            _profile = profile;
+		[ContextMethod("Подключиться", "Logon")]
+		public void Logon(InternetMailProfile profile, InternetMailProtocol receiveMailProtocol = InternetMailProtocol.Pop3)
+		{
+			_profile = profile;
 
 			if (!string.IsNullOrEmpty(_profile.SmtpServerAddress) && !_profile.Pop3BeforeSmtp)
 				LogonSmtp();
@@ -64,30 +88,30 @@ namespace OneScript.InternetMail
 			switch (receiveMailProtocol)
 			{
 				case InternetMailProtocol.Imap:
-					
-					receiver = new Pop3Receiver(); // TODO: ImapReceiver
+
+					receiver = new ImapReceiver();
 					if (!string.IsNullOrEmpty(_profile.ImapServerAddress))
 						receiver.Logon(_profile);
-					
+
 					break;
-					
+
 				case InternetMailProtocol.Pop3:
-					
+
 					receiver = new Pop3Receiver();
 					if (!string.IsNullOrEmpty(_profile.Pop3ServerAddress))
 						receiver.Logon(_profile);
 
 					break;
-					
+
 				case InternetMailProtocol.Smtp:
-					
+
 					throw new RuntimeException("Недопустимо указывать SMTP в качестве протокола получения почты!");
 			}
 
 			if (!string.IsNullOrEmpty(_profile.SmtpServerAddress) && _profile.Pop3BeforeSmtp)
 				LogonSmtp();
 
-        }
+		}
 
 		[ContextMethod("Отключиться", "Logoff")]
 		public void Logoff()
@@ -96,23 +120,23 @@ namespace OneScript.InternetMail
 			receiver?.Logoff();
 		}
 
-        [ContextMethod("Послать", "Send")]
-        public void Send(InternetMailMessage message,
-                         InternetMailTextProcessing processText = InternetMailTextProcessing.Process,
-                         InternetMailProtocol protocol = InternetMailProtocol.Smtp)
-        {
-            if (protocol == InternetMailProtocol.Pop3)
-            {
-                throw new RuntimeException("Недопустимо указывать POP3 в качестве протокола отправки почты!");
-            }
+		[ContextMethod("Послать", "Send")]
+		public void Send(InternetMailMessage message,
+						 InternetMailTextProcessing processText = InternetMailTextProcessing.Process,
+						 InternetMailProtocol protocol = InternetMailProtocol.Smtp)
+		{
+			if (protocol == InternetMailProtocol.Pop3)
+			{
+				throw new RuntimeException("Недопустимо указывать POP3 в качестве протокола отправки почты!");
+			}
 
 			var messageToSend = message.CreateNativeMessage(processText);
 
-            if (protocol == InternetMailProtocol.Smtp)
-            {
+			if (protocol == InternetMailProtocol.Smtp)
+			{
 				smtpClient.Send(messageToSend);
-            }
-        }
+			}
+		}
 
 		[ContextMethod("ПолучитьЗаголовки", "GetHeaders")]
 		public ArrayImpl GetHeaders(StructureImpl filter = null)
@@ -194,10 +218,10 @@ namespace OneScript.InternetMail
 			((IDisposable)smtpClient).Dispose();
 		}
 
-        [ScriptConstructor]
-        public static IRuntimeContextInstance Constructor()
-        {
-            return new InternetMail();
-        }
+		[ScriptConstructor]
+		public static IRuntimeContextInstance Constructor()
+		{
+			return new InternetMail();
+		}
 	}
 }

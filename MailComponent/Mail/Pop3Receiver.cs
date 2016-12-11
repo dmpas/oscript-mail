@@ -149,14 +149,13 @@ namespace OneScript.InternetMail
 
 		public ArrayImpl Get(bool deleteMessages, ArrayImpl ids, bool markAsRead)
 		{
-
 			if (markAsRead != true)
 				throw RuntimeException.InvalidArgumentValue(); // TODO: Внятное сообщение
 
 			var result = new ArrayImpl();
 			var processedMessages = GetMessagesList(ids);
 
-			foreach (int i in processedMessages)
+			foreach (var i in processedMessages)
 			{
 				var mimeMessage = client.GetMessage(i);
 				var iMessage = new InternetMailMessage(mimeMessage, client.GetMessageUid(i));
@@ -214,7 +213,7 @@ namespace OneScript.InternetMail
 
 		public void ClearDeletedMessages()
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedInSelectedProtocol(notSupportedMessage);
 		}
 		#endregion
 

@@ -35,6 +35,34 @@ namespace OneScript.InternetMail
 			Uid = new ArrayImpl();
 		}
 
+		private static HeaderList GenerateHeadersList(MailKit.IMessageSummary headers)
+		{
+			var headerList = new HeaderList();
+			foreach (var CcAddress in headers.Envelope.Cc)
+			{
+				headerList.Add("CC", CcAddress.ToString());
+			}
+			foreach (var CcAddress in headers.Envelope.Bcc)
+			{
+				headerList.Add("BCC", CcAddress.ToString());
+			}
+			foreach (var CcAddress in headers.Envelope.From)
+			{
+				headerList.Add("From", CcAddress.ToString());
+			}
+			foreach (var CcAddress in headers.Envelope.Sender)
+			{
+				headerList.Add("Sender", CcAddress.ToString());
+			}
+			headerList.Add("Subject", headers.Envelope.Subject);
+
+			if (headers.Envelope.Date != null)
+			{
+				headerList.Add("Date", MimeKit.Utils.DateUtils.FormatDate(headers.Date));
+			}
+			return headerList;
+		}
+
 		public InternetMailMessage(HeaderList headers) : this()
 		{
 			using (var sw = new MemoryStream())
@@ -54,6 +82,10 @@ namespace OneScript.InternetMail
 			}
 
 			DateReceived = DateTime.Now;
+		}
+
+		public InternetMailMessage(MailKit.IMessageSummary headers) : this(GenerateHeadersList(headers))
+		{
 		}
 
 		public InternetMailMessage(MimeMessage nativeMessage, string identifier) : this(nativeMessage.Headers)
