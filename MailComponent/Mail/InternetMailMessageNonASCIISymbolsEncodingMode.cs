@@ -12,10 +12,10 @@ namespace OneScript.InternetMail
 	[EnumerationType("СпособКодированияНеASCIIСимволовИнтернетПочтовогоСообщения", "InternetMailMessageNonASCIISymbolsEncodingMode")]
 	public enum InternetMailMessageNonAsciiSymbolsEncodingMode
 	{
-		[EnumItem("MIME")]
+		[EnumItem("MIME", "МИМЕ")]
 		Mime,
 
-		[EnumItem("QuotedPrintable")]
+		[EnumItem("QuotedPrintable", "Кодировать")]
 		QuotedPrintable,
 
 		[EnumItem("БезКодирования", "None")]

@@ -12,7 +12,7 @@ using System.Collections;
 
 namespace OneScript.InternetMail
 {
-	[ContextClass("ИнтернетТекстsПочтовогоСообщения", "InternetMailTexts")]
+	[ContextClass("ИнтернетТекстыПочтовогоСообщения", "InternetMailTexts")]
 	public class InternetMailTexts : AutoContext<InternetMailTexts>, ICollectionContext, IEnumerable<InternetMailText>
 	{
 		private readonly List<InternetMailText> _data = new List<InternetMailText>();

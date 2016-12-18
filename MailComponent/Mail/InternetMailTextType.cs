@@ -13,7 +13,7 @@ namespace OneScript.InternetMail
 	[EnumerationType("ТипТекстаПочтовогоСообщения", "InternetMailTextType")]
 	public enum InternetMailTextType
 	{
-		[EnumItem("HTML")]
+		[EnumItem("HTML", "ГиперТекст")]
 		Html,
 
 		[EnumItem("ПростойТекст", "PlainText")]

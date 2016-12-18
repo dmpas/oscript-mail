@@ -14,10 +14,10 @@ namespace OneScript.InternetMail
 	public enum InternetMailAttachmentEncodingMode
 	{
 
-		[EnumItem("MIME")]
+		[EnumItem("MIME", "МИМЕ")]
 		Mime,
 
-		[EnumItem("UUEncode")]
+		[EnumItem("UUEncode", "УУЕнкоде")]
 		Uuencode
 
 	}

@@ -14,13 +14,13 @@ namespace OneScript.InternetMail
 	public enum InternetMailProtocol
 	{
 
-		[EnumItem("IMAP")]
+		[EnumItem("IMAP", "Имап")]
 		Imap,
 
-		[EnumItem("POP3")]
+		[EnumItem("POP3", "ПОП3")]
 		Pop3,
 
-		[EnumItem("SMTP")]
+		[EnumItem("SMTP", "СМТП")]
 		Smtp
 
 	}
