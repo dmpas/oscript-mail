@@ -15,7 +15,7 @@ using ScriptEngine.HostedScript.Library;
 
 namespace OneScript.InternetMail
 {
-	public class ImapReceiver : IMailReceiver, IDisposable
+	public class ImapReceiver : IMailReceiver, IMailSender, IDisposable
 	{
 		private readonly ImapClient client = new ImapClient();
 		private InternetMailProfile _profile;
@@ -225,7 +225,7 @@ namespace OneScript.InternetMail
 				var headerWithUid = ivHeaderWithUid as InternetMailMessage;
 				var Id = headerWithUid.Uid.Get(0);
 
-				if (identifiers == null || identifiers.Find(Id).DataType != DataType.Undefined)
+				if (identifiers == null || identifiers.Find(Id).DataType == DataType.Undefined)
 					result.Add(Id);
 			}
 
@@ -311,5 +311,10 @@ namespace OneScript.InternetMail
 			Logoff();
 		}
 
+		public void Send(InternetMailMessage message, InternetMailTextProcessing processText)
+		{
+			var messageToSend = message.CreateNativeMessage(processText);
+			_currentFolder.Append(messageToSend);
+		}
 	}
 }

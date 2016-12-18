@@ -74,6 +74,8 @@
     <Compile Include="Mail\NotSupportedInSelectedProtocol.cs" />
     <Compile Include="Mail\ImapReceiver.cs" />
     <Compile Include="Mail\ImapSearchFilter.cs" />
+    <Compile Include="Mail\IMailSender.cs" />
+    <Compile Include="Mail\SmtpSender.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

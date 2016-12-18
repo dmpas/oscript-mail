@@ -135,7 +135,7 @@ namespace OneScript.InternetMail
 			{
 				var Id = ValueFactory.Create(uid);
 
-				if (identifiers == null || identifiers.Find(Id).DataType != DataType.Undefined)
+				if (identifiers == null || identifiers.Find(Id).DataType == DataType.Undefined)
 					result.Add(Id);
 			}
 
@@ -165,6 +165,7 @@ namespace OneScript.InternetMail
 			if (deleteMessages && processedMessages.Count > 0)
 			{
 				client.DeleteMessages(processedMessages);
+				Relogon();
 			}
 
 			return result;

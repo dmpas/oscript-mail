@@ -19,7 +19,7 @@ namespace OneScript.InternetMail
 	{
 		private InternetMailProfile _profile;
 
-		private SmtpClient smtpClient = new SmtpClient();
+		private readonly SmtpSender smtpClient = new SmtpSender();
 		private IMailReceiver receiver;
 		private string _currentMailbox = "";
 		private string _mailboxDelimiterCharacter = "";
@@ -60,19 +60,12 @@ namespace OneScript.InternetMail
 
 		private void LogonSmtp()
 		{
-			SecureSocketOptions options = SecureSocketOptions.Auto;
-			smtpClient.Timeout = _profile.Timeout * 1000;
-			smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => true;
-			smtpClient.Connect(_profile.SmtpServerAddress, _profile.GetSmtpPort(), options);
-
-			if (_profile.SmtpUser != "")
-				smtpClient.Authenticate(_profile.SmtpUser, _profile.SmtpPassword);
+			smtpClient.Logon(_profile);
 		}
 
 		private void LogoffSmtp()
 		{
-			if (smtpClient.IsConnected)
-				smtpClient.Disconnect(true);
+			smtpClient.Logoff();
 		}
 
 		#endregion
@@ -83,7 +76,9 @@ namespace OneScript.InternetMail
 			_profile = profile;
 
 			if (!string.IsNullOrEmpty(_profile.SmtpServerAddress) && !_profile.Pop3BeforeSmtp)
+			{
 				LogonSmtp();
+			}
 
 			switch (receiveMailProtocol)
 			{
@@ -130,12 +125,17 @@ namespace OneScript.InternetMail
 				throw new RuntimeException("Недопустимо указывать POP3 в качестве протокола отправки почты!");
 			}
 
-			var messageToSend = message.CreateNativeMessage(processText);
-
+			IMailSender sender = null;
 			if (protocol == InternetMailProtocol.Smtp)
+				sender = smtpClient;
+			else if (protocol == InternetMailProtocol.Imap)
 			{
-				smtpClient.Send(messageToSend);
+				sender = receiver as ImapReceiver;
+				if (sender == null)
+					throw new RuntimeException("Соединение IMAP не установлено!");
 			}
+
+			sender?.Send(message, processText);
 		}
 
 		[ContextMethod("ПолучитьЗаголовки", "GetHeaders")]
@@ -162,46 +162,55 @@ namespace OneScript.InternetMail
 			receiver?.DeleteMessages(dataToDelete);
 		}
 
+		[ContextMethod("ПолучитьПочтовыеЯщики", "GetMailBoxes")]
 		public ArrayImpl GetMailboxes()
 		{
 			return receiver?.GetMailboxes();
 		}
 
+		[ContextMethod("ПолучитьПочтовыеЯщикиПоПодписке", "GetMailBoxesBySubscription")]
 		public ArrayImpl GetMailboxesBySubscription()
 		{
 			return receiver?.GetMailboxesBySubscription();
 		}
 
+		[ContextMethod("ПодписатьсяНаПочтовыйЯщик", "SubscribeToMailbox")]
 		public void SubscribeToMailbox(string name)
 		{
 			receiver?.SubscribeToMailbox(name);
 		}
 
+		[ContextMethod("ОтменитьПодпискуНаПочтовыйЯщик", "UnsubscribeFromMailbox")]
 		public void UnsubscribeFromMailbox(string name)
 		{
 			receiver?.UnsubscribeFromMailbox(name);
 		}
 
+		[ContextMethod("ОтменитьУдалениеСообщений", "UndeleteMessages")]
 		public void UndeleteMessages(ArrayImpl deletedData)
 		{
 			receiver?.UndeleteMessages(deletedData);
 		}
 
+		[ContextMethod("ОчиститьУдаленныеСообщения", "ClearDeletedMessages")]
 		public void ClearDeletedMessages()
 		{
 			receiver?.ClearDeletedMessages();
 		}
 
+		[ContextMethod("ПереименоватьПочтовыйЯщик", "RenameMailbox")]
 		public void RenameMailbox(string name, string newName)
 		{
 			receiver?.RenameMailbox(name, newName);
 		}
 
+		[ContextMethod("СоздатьПочтовыйЯщик", "CreateMailbox")]
 		public void CreateMailbox(string name)
 		{
 			receiver?.CreateMailbox(name);
 		}
 
+		[ContextMethod("УдалитьПочтовыйЯщик", "DeleteMailbox")]
 		public void DeleteMailbox(string name)
 		{
 			receiver?.DeleteMailbox(name);
@@ -215,7 +224,8 @@ namespace OneScript.InternetMail
 
 		public void Dispose()
 		{
-			((IDisposable)smtpClient).Dispose();
+			smtpClient.Dispose();
+			(receiver as IDisposable)?.Dispose();
 		}
 
 		[ScriptConstructor]
