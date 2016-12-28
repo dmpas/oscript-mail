@@ -32,12 +32,6 @@
     <Reference Include="DotNetZip">
       <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
     </Reference>
-    <Reference Include="ScriptEngine">
-      <HintPath>..\packages\ScriptEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="ScriptEngine.HostedScript">
-      <HintPath>..\packages\ScriptEngine.HostedScript.dll</HintPath>
-    </Reference>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -47,8 +41,17 @@
     <Reference Include="MimeKit">
       <HintPath>..\packages\MimeKit.1.10.0\lib\net45\MimeKit.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ScriptEngine.HostedScript">
+      <HintPath>..\packages\OneScript.StandardLibrary.1.0.15\lib\net40\ScriptEngine.HostedScript.dll</HintPath>
+    </Reference>
+    <Reference Include="ScriptEngine">
+      <HintPath>..\packages\OneScript.1.0.15\lib\net40\ScriptEngine.dll</HintPath>
+    </Reference>
     <Reference Include="MailKit">
-      <HintPath>..\packages\MailKit.1.10.0\lib\net45\MailKit.dll</HintPath>
+      <HintPath>..\packages\MailKit.1.10.1\lib\net45\MailKit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@ using System;
 using ScriptEngine.Machine.Contexts;
 using ScriptEngine.Machine;
 using ScriptEngine.HostedScript.Library;
+using ScriptEngine.HostedScript.Library.Binary;
 using System.IO;
 using MimeKit;
 

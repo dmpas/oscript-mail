@@ -9,7 +9,7 @@ using ScriptEngine.Machine.Contexts;
 using ScriptEngine.Machine;
 using System.Collections.Generic;
 using System.Collections;
-using ScriptEngine.HostedScript.Library;
+using ScriptEngine.HostedScript.Library.Binary;
 
 namespace OneScript.InternetMail
 {
