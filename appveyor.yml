@@ -24,7 +24,7 @@ after_build:
 - cmd: >-
     xcopy MailComponent\bin\Release\*.dll lib /Y
     
-    del lib/ScriptEngine*.dll
+    del lib\ScriptEngine*.dll
     
     cd lib
     
