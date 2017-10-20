@@ -55,7 +55,7 @@ namespace OneScript.InternetMail
 			{
 				headerList.Add("Sender", CcAddress.ToString());
 			}
-			headerList.Add("Subject", headers.Envelope.Subject);
+			headerList.Add("Subject", headers.Envelope.Subject ?? "");
 
 			if (headers.Envelope.Date != null)
 			{
@@ -193,8 +193,14 @@ namespace OneScript.InternetMail
 		[ContextProperty("Тексты", "Texts")]
 		public InternetMailTexts Texts { get; }
 
-		[ContextProperty("Тема", "Theme")]
-		public string Theme { get; set; }
+		[ContextProperty("Тема", "Subject")]
+		public string Subject { get; set; } = "";
+
+		[Obsolete]
+		[ContextProperty("Theme")]
+		public string ObsoleteTheme { get => Subject;
+			set => Subject = value;
+		}
 
 		[ContextProperty("УведомитьОДоставке", "RequestDeliveryReceipt")]
 		public bool RequestDeliveryReceipt { get; set; }
@@ -265,7 +271,7 @@ namespace OneScript.InternetMail
 				SenderName = stringValue;
 
 			else if (fieldName.Equals("Subject", StringComparison.InvariantCultureIgnoreCase))
-				Theme = stringValue;
+				Subject = stringValue;
 		}
 
 		public MimeMessage CreateNativeMessage(InternetMailTextProcessing processText = InternetMailTextProcessing.Process)
@@ -292,7 +298,7 @@ namespace OneScript.InternetMail
 				messageToSend.ReplyTo.Add(replyTo.GetInternalObject());
 			}
 
-			messageToSend.Subject = Theme;
+			messageToSend.Subject = Subject;
 
 			if (Texts.Count() == 1)
 			{
