@@ -22,7 +22,7 @@ test_script:
 
 after_build:
 - cmd: >-
-    xcopy MailComponent/bin/Release/*.dll lib/
+    xcopy MailComponent\bin\Release\*.dll lib /Y
     
     del lib/ScriptEngine*.dll
     
