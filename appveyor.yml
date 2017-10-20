@@ -18,7 +18,7 @@ configuration: Release
 build:
   verbosity: minimal
 test_script:
-- ps: nunit3-console --x86 NUnitTests\bin\Debug\NUnitTests.dll
+- ps: nunit3-console --x86 NUnitTests\bin\Release\NUnitTests.dll
 
 after_build:
 - cmd: >-
