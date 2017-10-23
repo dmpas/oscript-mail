@@ -12,6 +12,9 @@ using System.Collections;
 
 namespace OneScript.InternetMail
 {
+	/// <summary>
+	/// Представляет собой коллекцию объектов типа ИнтернетПочтовыйАдрес.
+	/// </summary>
 	[ContextClass("ИнтернетПочтовыеАдреса", "InternetMailAddresses")]
 	public class InternetMailAddresses : AutoContext<InternetMailAddresses>, ICollectionContext, IEnumerable<InternetMailAddress>
 	{
@@ -33,6 +36,11 @@ namespace OneScript.InternetMail
 			return GetEnumerator();
 		}
 
+		/// <summary>
+		/// Добавляет адрес в коллекцию.
+		/// </summary>
+		/// <param name="address">Почтовый адрес.</param>
+		/// <returns></returns>
 		[ContextMethod("Добавить", "Add")]
 		public InternetMailAddress Add(string address)
 		{
@@ -43,24 +51,41 @@ namespace OneScript.InternetMail
 			return newAddress;
 		}
 
+		/// <summary>
+		/// Получает количество элементов в коллекции почтовых адресов.
+		/// </summary>
+		/// <returns></returns>
 		[ContextMethod("Количество", "Count")]
 		public int Count()
 		{
 			return _data.Count;
 		}
 
+		/// <summary>
+		/// Удаляет все элементы коллекции.
+		/// </summary>
 		[ContextMethod("Очистить", "Clear")]
 		public void Clear()
 		{
 			_data.Clear();
 		}
 
+		/// <summary>
+		/// Получает значение по индексу. Работает аналогично оператору [].
+		/// </summary>
+		/// <param name="index">Индекс элемента коллекции.</param>
+		/// <returns></returns>
 		[ContextMethod("Получить", "Get")]
 		public InternetMailAddress Get(int index)
 		{
 			return _data[index];
 		}
 
+		/// <summary>
+		/// Удаляет элемент из коллекции.
+		/// </summary>
+		/// <param name="element">Индекс элемента коллекции или элемент коллекции.</param>
+		/// <exception cref="RuntimeException"></exception>
 		[ContextMethod("Удалить", "Delete")]
 		public void Delete(IValue element)
 		{
