@@ -1,7 +1,7 @@
 version: 1.0.4-{build}
 image: Visual Studio 2017
 environment:
-  main_project: oscript-component
+  main_project: MailComponent
 before_build:
 - ps: nuget restore
 init:
