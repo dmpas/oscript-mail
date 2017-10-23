@@ -13,6 +13,9 @@ using ScriptEngine.HostedScript.Library.Binary;
 
 namespace OneScript.InternetMail
 {
+	/// <summary>
+	/// Коллекция почтовых вложений.
+	/// </summary>
 	[ContextClass("ИнтернетПочтовыеВложения", "InternetMailAttachments")]
 	public class InternetMailAttachments : AutoContext<InternetMailAttachments>, ICollectionContext, IEnumerable<InternetMailAttachment>
 	{
@@ -22,6 +25,10 @@ namespace OneScript.InternetMail
 
 		private readonly List<InternetMailAttachment> _data = new List<InternetMailAttachment>();
 
+		/// <summary>
+		/// Получает размер коллекции почтовых вложений.
+		/// </summary>
+		/// <returns></returns>
 		[ContextMethod("Количество", "Count")]
 		public int Count()
 		{
@@ -70,6 +77,13 @@ namespace OneScript.InternetMail
 		}
 
 
+		/// <summary>
+		/// Добавляет вложение
+		/// </summary>
+		/// <param name="source">Адрес файла-вложения.</param>
+		/// <param name="attachmentName">Имя вложения, которое отображают почтовые клиенты.</param>
+		/// <returns></returns>
+		/// <exception cref="RuntimeException"></exception>
 		[ContextMethod("Добавить", "Add")]
 		public InternetMailAttachment Add(IValue source, string attachmentName = "")
 		{
@@ -83,18 +97,31 @@ namespace OneScript.InternetMail
 			throw RuntimeException.InvalidArgumentType(nameof(source));
 		}
 
+		/// <summary>
+		/// Удаляет все элементы коллекции.
+		/// </summary>
 		[ContextMethod("Очистить", "Clear")]
 		public void Clear()
 		{
 			_data.Clear();
 		}
 
+		/// <summary>
+		/// Получает значение по индексу. Работает аналогично оператору [].
+		/// </summary>
+		/// <param name="index">Индекс элемента коллекции.</param>
+		/// <returns></returns>
 		[ContextMethod("Получить", "Get")]
 		public InternetMailAttachment Get(int index)
 		{
 			return _data[index];
 		}
 
+		/// <summary>
+		/// Удаляет почтовое вложение из коллекции.
+		/// </summary>
+		/// <param name="element">Индекс элемента коллекции или элемент коллекции.</param>
+		/// <exception cref="RuntimeException"></exception>
 		[ContextMethod("Удалить", "Delete")]
 		public void Delete(IValue element)
 		{

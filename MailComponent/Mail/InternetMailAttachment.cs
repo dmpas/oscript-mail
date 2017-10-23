@@ -11,6 +11,9 @@ using ScriptEngine.HostedScript.Library.Binary;
 
 namespace OneScript.InternetMail
 {
+	/// <summary>
+	/// Вложение в почтовое сообщение представляет собой двоичные данные.
+	/// </summary>
 	[ContextClass("ИнтернетПочтовоеВложение", "InternetMailAttachment")]
 	public class InternetMailAttachment : AutoContext<InternetMailAttachment>
 	{
@@ -27,24 +30,48 @@ namespace OneScript.InternetMail
 			FileName = System.IO.Path.GetFileName(fileName);
 		}
 
+		/// <summary>
+		/// Содержит данные почтового вложения.
+		/// </summary>
 		[ContextProperty("Данные", "Data")]
 		public IValue Data { get; set; }
 
+		/// <summary>
+		/// Идентификатор вложения.
+		/// </summary>
 		[ContextProperty("Идентификатор", "CID")]
 		public string CID { get; set; }
 
+		/// <summary>
+		/// Наименование вложения в сообщении. Используется в пользовательском интерфейсе.
+		/// </summary>
 		[ContextProperty("Имя", "Name")]
 		public string Name { get; set; }
 
+		/// <summary>
+		/// Имя файла вложения.
+		/// </summary>
 		[ContextProperty("ИмяФайла", "FileName")]
 		public string FileName { get; }
 
+		/// <summary>
+		/// Содержит кодировку для наименования вложения.
+		/// Если кодировка не указана, будет использоваться значение кодировки из свойства Кодировка, объекта ИнтернетПочтовоеСообщение.
+		/// </summary>
 		[ContextProperty("Кодировка", "Encoding")]
 		public string Encoding { get; set; }
 
+		/// <summary>
+		/// Содержит способ кодирования вложений сообщения. По умолчанию используется метод MIME.
+		/// </summary>
 		[ContextProperty("СпособКодирования", "EncodingMode")]
 		public InternetMailAttachmentEncodingMode EncodingMode { get; set; }
 
+		/// <summary>
+		/// Содержит MIME тип вложения.
+		/// Если свойство при отправке сообщения не заполнено, то производится попытка автоматически определить MIME тип вложения.
+		/// Если автоматически определить тип не получилось, для такого вложения используется тип "application/octet-stream".
+		/// </summary>
 		[ContextProperty("ТипСодержимого", "MIMEType")]
 		public string MimeType { get; set; }
 	}
