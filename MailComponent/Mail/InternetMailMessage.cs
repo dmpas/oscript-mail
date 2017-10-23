@@ -300,21 +300,36 @@ namespace OneScript.InternetMail
 
 			messageToSend.Subject = Subject;
 
-			if (Texts.Count() == 1)
+			var body = new Multipart();
+			foreach (var text in Texts)
 			{
-				messageToSend.Body = Texts.Get(0).CreateTextPart();
+				var part = text.CreateTextPart();
+				body.Add(part);
 			}
-			else {
-				var body = new Multipart();
-				foreach (var text in Texts)
-				{
-					var part = text.CreateTextPart();
-					body.Add(part);
-				}
-				messageToSend.Body = body;
-			}
+            
+            if (Attachments.Count() > 0) {
 
-			return messageToSend;
+                foreach (InternetMailAttachment attachment in Attachments)
+                {
+                    var mimeattachment = new MimePart()
+                    {
+                        ContentObject = new ContentObject(((BinaryDataContext) attachment.Data.AsObject()).OpenStreamForRead().GetUnderlyingStream(), ContentEncoding.Default),
+                        ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                        ContentTransferEncoding = ContentEncoding.Base64,
+                        FileName = attachment.FileName
+                    };
+                    if (String.IsNullOrEmpty(attachment.FileName))
+                    {
+                        mimeattachment.FileName = attachment.Name;
+                    }
+
+                    body.Add(mimeattachment);
+                }
+            }
+
+            messageToSend.Body = body;
+
+            return messageToSend;
 		}
 
 		[ScriptConstructor]
