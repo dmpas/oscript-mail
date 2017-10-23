@@ -10,13 +10,22 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
+	/// <summary>
+	/// Описывает способ кодирования вложений почтового сообщения.
+	/// </summary>
 	[EnumerationType("СпособКодированияИнтернетПочтовогоСообщения", "InternetMailAttachmentEncodingMode")]
 	public enum InternetMailAttachmentEncodingMode
 	{
 
+		/// <summary>
+		/// Кодирование вложений способом MIME.
+		/// </summary>
 		[EnumItem("MIME", "МИМЕ")]
 		Mime,
 
+		/// <summary>
+		/// Кодирование вложений способом UUEncode.
+		/// </summary>
 		[EnumItem("UUEncode", "УУЕнкоде")]
 		Uuencode
 

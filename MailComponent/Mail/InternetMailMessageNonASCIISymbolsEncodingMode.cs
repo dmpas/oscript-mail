@@ -9,15 +9,28 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
+	/// <summary>
+	/// Содержит варианты способов кодирования не ASCII символов в почтовом сообщении.
+	/// </summary>
 	[EnumerationType("СпособКодированияНеASCIIСимволовИнтернетПочтовогоСообщения", "InternetMailMessageNonASCIISymbolsEncodingMode")]
 	public enum InternetMailMessageNonAsciiSymbolsEncodingMode
 	{
+		/// <summary>
+		/// Кодируются методом MIME.
+		/// </summary>
 		[EnumItem("MIME", "МИМЕ")]
 		Mime,
 
+		/// <summary>
+		/// Кодируются методом Quoted-Printable.
+		/// </summary>
 		[EnumItem("QuotedPrintable", "Кодировать")]
 		QuotedPrintable,
 
+		/// <summary>
+		/// Все поля заголовков, содержащие не ASCII символы кодироваться не будут.
+		/// Все символы будут конвертироваться в кодировку, заданною свойством Кодировка.
+		/// </summary>
 		[EnumItem("БезКодирования", "None")]
 		None
 	}

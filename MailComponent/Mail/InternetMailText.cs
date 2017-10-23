@@ -11,6 +11,9 @@ using MimeKit;
 
 namespace OneScript.InternetMail
 {
+	/// <summary>
+	/// Текстовые данные письма.
+	/// </summary>
 	[ContextClass("ИнтернетТекстПочтовогоСообщения", "InternetMailText")]
 	public class InternetMailText : AutoContext<InternetMailText>
 	{
@@ -36,6 +39,10 @@ namespace OneScript.InternetMail
 			TextType = type;
 		}
 
+		/// <summary>
+		/// Содержит текстовые данные сообщения.
+		/// Данные были только раскодированы, но работы над кодировкой текстов не производилось.
+		/// </summary>
 		[ContextProperty("Данные", "Data")]
 		public BinaryDataContext Data
 		{
@@ -46,12 +53,22 @@ namespace OneScript.InternetMail
 			}
 		}
 
+		/// <summary>
+		/// Содержит кодировку текстовых данных сообщения.
+		/// Если кодировка не указана, будет использоваться значение кодировки из свойства Кодировка.
+		/// </summary>
 		[ContextProperty("Кодировка", "Encoding")]
 		public string Encoding { get; set; }
 
+		/// <summary>
+		/// Текстовые данные сообщения.
+		/// </summary>
 		[ContextProperty("Текст", "Text")]
 		public string Text { get; set; }
 
+		/// <summary>
+		/// Тип текстовых данных письма.
+		/// </summary>
 		[ContextProperty("ТипТекста", "TextType")]
 		public InternetMailTextType TextType { get; set; }
 
