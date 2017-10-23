@@ -282,7 +282,7 @@ namespace OneScript.InternetMail
 			var messageToSend = new MimeMessage();
 
 			if (Sender.DataType == DataType.String)
-				messageToSend.From.Add(new MailboxAddress("", Sender.AsString()));
+				messageToSend.From.Add(new MailboxAddress(SenderName, Sender.AsString()));
 			else if (Sender is InternetMailAddress)
 				messageToSend.From.Add((Sender as InternetMailAddress).GetInternalObject());
 			else
