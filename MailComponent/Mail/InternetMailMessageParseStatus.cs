@@ -10,12 +10,23 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
+	/// <summary>
+	/// Содержит виды статусов разбора почтового сообщения:
+	/// - ОбнаруженыОшибки - ошибки в структуре письма при разборе были обнаружены ошибки. Объект ИнтернетПочтовоеСообщение может содержать ошибки.
+	/// - ОшибокНеОбнаружено - при разборе письма ошибки обнаружены не были.
+	/// </summary>
 	[EnumerationType("СтатусРазбораПочтовогоСообщения", "InternetMailMessageParseStatus")]
 	public enum InternetMailMessageParseStatus
 	{
+		/// <summary>
+		/// При разборе почтового сообщения обнаружены ошибки. Некоторые поля сообщения могут быть не заполнены.
+		/// </summary>
 		[EnumItem("ОбнаруженыОшибки", "ErrorsDetected")]
 		ErrorsDetected,
 
+		/// <summary>
+		/// При разборе почтового соощения ошибок обнаружено не было.
+		/// </summary>
 		[EnumItem("ОшибокНеОбнаружено", "ErrorsNotDetected")]
 		ErrorsNotDetected
 	}

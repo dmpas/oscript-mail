@@ -10,21 +10,39 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
+	/// <summary>
+	/// Содержит варианты важности почтового сообщения.
+	/// </summary>
 	[EnumerationType("ВажностьИнтернетПочтовогоСообщения", "InternetMailMessageImportance")]
 	public enum InternetMailMessageImportance
 	{
+		/// <summary>
+		/// Высокая важность сообщения.
+		/// </summary>
 		[EnumItem("Высокая", "High")]
 		High,
 
+		/// <summary>
+		/// Наивысшая важность сообщения.
+		/// </summary>
 		[EnumItem("Наивысшая", "Highest")]
 		Highest,
 
+		/// <summary>
+		/// Наименьшая важность сообщения.
+		/// </summary>
 		[EnumItem("Наименьшая", "Lowest")]
 		Lowest,
 
+		/// <summary>
+		/// Низкая важность сообщения.
+		/// </summary>
 		[EnumItem("Низкая", "Low")]
 		Low,
 
+		/// <summary>
+		/// Обычная важность сообщения.
+		/// </summary>
 		[EnumItem("Обычная", "Normal")]
 		Normal
 	}

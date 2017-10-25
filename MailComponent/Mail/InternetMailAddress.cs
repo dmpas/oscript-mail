@@ -11,9 +11,15 @@ using MimeKit;
 
 namespace OneScript.InternetMail
 {
+	/// <summary>
+	/// Адрес для обмена почтовыми сообщениями.
+	/// </summary>
 	[ContextClass("ИнтернетПочтовыйАдрес", "InternetMailAddress")]
 	public class InternetMailAddress : AutoContext<InternetMailAddress>
 	{
+		/// <summary>
+		/// Полный адрес электронной почты в формате "пользователь@сервер".
+		/// </summary>
 		[ContextProperty("Адрес", "Address")]
 		public string Address
 		{
@@ -29,15 +35,30 @@ namespace OneScript.InternetMail
 			}
 		}
 
+		/// <summary>
+		/// Содержит кодировку для отображаемых имен.
+		/// Если кодировка не указана, будет использоваться значение кодировки из свойства Кодировка, объекта ИнтернетПочтовоеСообщение.
+		/// </summary>
 		[ContextProperty("Кодировка", "Encoding")]
 		public string Encoding { get; set; }
 
+		/// <summary>
+		/// Содержит представление почтового адреса.
+		/// Произвольный текст, сопоставляемый почтовому адресу, указанному в свойстве Адрес.
+		/// Используется почтовыми клиентами при разборе сообщения в качестве отображаемого имени получателя, отправителя и т.д.
+		/// </summary>
 		[ContextProperty("ОтображаемоеИмя", "DisplayName")]
 		public string DisplayName { get; set; }
 
+		/// <summary>
+		/// Часть "пользователь" почтового адреса.
+		/// </summary>
 		[ContextProperty("Пользователь", "User")]
 		public string User { get; set; }
 
+		/// <summary>
+		/// Часть "сервер" почтового адреса.
+		/// </summary>
 		[ContextProperty("Сервер", "Server")]
 		public string Server { get; set; }
 

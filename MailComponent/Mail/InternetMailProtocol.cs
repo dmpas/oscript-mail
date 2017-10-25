@@ -10,16 +10,28 @@ using ScriptEngine;
 
 namespace OneScript.InternetMail
 {
+	/// <summary>
+	/// Определяет набор допустимых типов протоколов, используемых Интернет почтой.
+	/// </summary>
 	[EnumerationType("ПротоколИнтернетПочты", "InternetMailProtocol")]
 	public enum InternetMailProtocol
 	{
 
+		/// <summary>
+		/// Соответствует IMAP протоколу.
+		/// </summary>
 		[EnumItem("IMAP", "Имап")]
 		Imap,
 
+		/// <summary>
+		/// Соответствует POP3 протоколу.
+		/// </summary>
 		[EnumItem("POP3", "ПОП3")]
 		Pop3,
 
+		/// <summary>
+		/// Соответствует SMTP протоколу.
+		/// </summary>
 		[EnumItem("SMTP", "СМТП")]
 		Smtp
 
