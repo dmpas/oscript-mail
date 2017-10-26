@@ -125,6 +125,17 @@ namespace OneScript.InternetMail
 					}
 				}
 			}
+
+            foreach (var attachment in nativeMessage.Attachments)
+            {
+                var part = (MimePart)attachment;
+                var fileName = part.FileName;
+
+                using (var stream = File.Create(fileName))
+                    part.ContentObject.DecodeTo(stream);
+
+                Attachments.Add(fileName);
+            }
 		}
 
 		/// <summary>
