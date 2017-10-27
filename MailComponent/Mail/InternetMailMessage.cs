@@ -132,9 +132,10 @@ namespace OneScript.InternetMail
                 var fileName = part.FileName;
 
                 using (var stream = File.Create(fileName))
-                    part.ContentObject.DecodeTo(stream);
-
+                    part.ContentObject.DecodeTo(stream);                
+                
                 Attachments.Add(fileName);
+                File.Delete(fileName);
             }
 		}
 
