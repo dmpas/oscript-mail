@@ -95,7 +95,7 @@ namespace OneScript.InternetMail
 		public InternetMailMessage(MimeMessage nativeMessage, string identifier) : this(nativeMessage.Headers)
 		{
             
-            Uid.Add(ValueFactory.Create(identifier));
+			Uid.Add(ValueFactory.Create(identifier));
 			if (nativeMessage.Body is TextPart)
 			{
 				Texts.Add(new InternetMailText(nativeMessage.Body as TextPart));
