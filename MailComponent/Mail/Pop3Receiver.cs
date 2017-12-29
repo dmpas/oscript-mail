@@ -154,16 +154,16 @@ namespace OneScript.InternetMail
 
 			var result = new ArrayImpl();
             
-            var processedMessages = GetMessagesList(ids);
+			var processedMessages = GetMessagesList(ids);
 
-            foreach (var i in processedMessages)
+			foreach (var i in processedMessages)
 			{
-                var mimeMessage = client.GetMessage(i);
+				var mimeMessage = client.GetMessage(i);
 
-                var iMessage = new InternetMailMessage(mimeMessage, client.GetMessageUid(i));
-                result.Add(iMessage);
-                
-            }
+				var iMessage = new InternetMailMessage(mimeMessage, client.GetMessageUid(i));
+				result.Add(iMessage);
+
+			}
 
 			if (deleteMessages && processedMessages.Count > 0)
 			{
