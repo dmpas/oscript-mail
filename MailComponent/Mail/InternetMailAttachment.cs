@@ -17,12 +17,28 @@ namespace OneScript.InternetMail
 	[ContextClass("ИнтернетПочтовоеВложение", "InternetMailAttachment")]
 	public class InternetMailAttachment : AutoContext<InternetMailAttachment>
 	{
-		public InternetMailAttachment()
+        /// <summary>
+        /// Пустое почтовое вложение
+        /// </summary>
+        public InternetMailAttachment()
 		{
 			EncodingMode = InternetMailAttachmentEncodingMode.Mime;
 			Data = ValueFactory.Create();
 		}
 
+		/// <summary>
+		/// Почтовое вложение на основании BinaryDataContext
+		/// </summary>
+		public InternetMailAttachment(BinaryDataContext binaryData, string fileName = "")
+		{
+			EncodingMode = InternetMailAttachmentEncodingMode.Mime;
+			Data = binaryData;
+			FileName = fileName;
+		}
+
+		/// <summary>
+		/// Почтовое вложение на основании файла
+		/// </summary>
 		public InternetMailAttachment(string fileName)
 		{
 			EncodingMode = InternetMailAttachmentEncodingMode.Mime;
