@@ -63,7 +63,8 @@ namespace OneScript.InternetMail
 			var attachment = new InternetMailAttachment();
 			attachment.Data = data;
 			attachment.Name = attachmentName;
-			_data.Add(attachment);
+            attachment.FileName = attachmentName;
+            _data.Add(attachment);
 			return attachment;
 		}
 

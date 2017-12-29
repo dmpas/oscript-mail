@@ -153,14 +153,25 @@ namespace OneScript.InternetMail
 				throw RuntimeException.InvalidArgumentValue(); // TODO: Внятное сообщение
 
 			var result = new ArrayImpl();
-			var processedMessages = GetMessagesList(ids);
+            
+            var processedMessages = GetMessagesList(ids);
 
-			foreach (var i in processedMessages)
+            foreach (var i in processedMessages)
 			{
-				var mimeMessage = client.GetMessage(i);
-				var iMessage = new InternetMailMessage(mimeMessage, client.GetMessageUid(i));
-				result.Add(iMessage);
-			}
+                var mimeMessage = client.GetMessage(i);
+
+                try
+                {
+                    var iMessage = new InternetMailMessage(mimeMessage, client.GetMessageUid(i));
+                    result.Add(iMessage);
+                }
+                catch (Exception e)
+                {
+
+                    Console.WriteLine(e.Source);
+                }
+                
+            }
 
 			if (deleteMessages && processedMessages.Count > 0)
 			{

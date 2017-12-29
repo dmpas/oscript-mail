@@ -94,14 +94,16 @@ namespace OneScript.InternetMail
 
 		public InternetMailMessage(MimeMessage nativeMessage, string identifier) : this(nativeMessage.Headers)
 		{
-			Uid.Add(ValueFactory.Create(identifier));
+            
+            Uid.Add(ValueFactory.Create(identifier));
 			if (nativeMessage.Body is TextPart)
 			{
-				Texts.Add(new InternetMailText(nativeMessage.Body as TextPart));
+                Texts.Add(new InternetMailText(nativeMessage.Body as TextPart));
 			}
 			else if (nativeMessage.Body is Multipart)
 			{
-				var body = nativeMessage.Body as Multipart;
+                
+                var body = nativeMessage.Body as Multipart;
 				foreach (var part in body)
 				{
 					if (part is TextPart)
@@ -130,12 +132,11 @@ namespace OneScript.InternetMail
             {
                 var part = (MimePart)attachment;
                 var fileName = part.FileName;
-
-                using (var stream = File.Create(fileName))
-                    part.ContentObject.DecodeTo(stream);                
+                var stream = new MemoryStream();
                 
-                Attachments.Add(fileName);
-                File.Delete(fileName);
+                part.ContentObject.DecodeTo(stream);
+                BinaryDataContext bin = new BinaryDataContext(stream.ToArray());
+                Attachments.Add(bin, fileName);
             }
 		}
 
