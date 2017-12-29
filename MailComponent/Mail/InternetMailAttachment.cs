@@ -26,9 +26,19 @@ namespace OneScript.InternetMail
 			Data = ValueFactory.Create();
 		}
 
-        /// <summary>
-        /// Почтовое вложение на основании файла
-        /// </summary>
+		/// <summary>
+		/// Почтовое вложение на основании BinaryDataContext
+		/// </summary>
+		public InternetMailAttachment(BinaryDataContext binaryData, string fileName = "")
+		{
+			EncodingMode = InternetMailAttachmentEncodingMode.Mime;
+			Data = binaryData;
+			FileName = fileName;
+		}
+
+		/// <summary>
+		/// Почтовое вложение на основании файла
+		/// </summary>
 		public InternetMailAttachment(string fileName)
 		{
 			EncodingMode = InternetMailAttachmentEncodingMode.Mime;
@@ -58,7 +68,7 @@ namespace OneScript.InternetMail
 		/// Имя файла вложения.
 		/// </summary>
 		[ContextProperty("ИмяФайла", "FileName")]
-		public string FileName { get; set; }
+		public string FileName { get; }
 
 		/// <summary>
 		/// Содержит кодировку для наименования вложения.

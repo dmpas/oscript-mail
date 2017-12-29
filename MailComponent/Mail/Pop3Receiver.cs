@@ -160,16 +160,8 @@ namespace OneScript.InternetMail
 			{
                 var mimeMessage = client.GetMessage(i);
 
-                try
-                {
-                    var iMessage = new InternetMailMessage(mimeMessage, client.GetMessageUid(i));
-                    result.Add(iMessage);
-                }
-                catch (Exception e)
-                {
-
-                    Console.WriteLine(e.Source);
-                }
+                var iMessage = new InternetMailMessage(mimeMessage, client.GetMessageUid(i));
+                result.Add(iMessage);
                 
             }
 

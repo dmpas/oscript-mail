@@ -128,16 +128,16 @@ namespace OneScript.InternetMail
 				}
 			}
 
-            foreach (var attachment in nativeMessage.Attachments)
+			foreach (var attachment in nativeMessage.Attachments)
             {
-                var part = (MimePart)attachment;
-                var fileName = part.FileName;
-                var stream = new MemoryStream();
+				var part = (MimePart)attachment;
+				var fileName = part.FileName;
+				var stream = new MemoryStream();
                 
-                part.ContentObject.DecodeTo(stream);
-                BinaryDataContext bin = new BinaryDataContext(stream.ToArray());
-                Attachments.Add(bin, fileName);
-            }
+				part.ContentObject.DecodeTo(stream);
+				BinaryDataContext bin = new BinaryDataContext(stream.ToArray());
+				Attachments.Add(bin, fileName);
+			}
 		}
 
 		/// <summary>
@@ -268,7 +268,6 @@ namespace OneScript.InternetMail
 
 		/// <summary>
 		/// Смещение даты отправления от универсального времени (UTC) в секундах. Для часовых поясов, отстающих от UTC, значение отрицательное.
-
 		/// Пример приведения даты отправления к дате в часовом поясе сеанса:
 		/// ДатаОтправленияВЗонеОтправителя = Сообщение.ДатаОтправления; 
 		/// <code>
