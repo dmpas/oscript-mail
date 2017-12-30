@@ -94,7 +94,7 @@ namespace OneScript.InternetMail
 
 		public InternetMailMessage(MimeMessage nativeMessage, string identifier) : this(nativeMessage.Headers)
 		{
-            
+
 			Uid.Add(ValueFactory.Create(identifier));
 			if (nativeMessage.Body is TextPart)
 			{
@@ -102,7 +102,7 @@ namespace OneScript.InternetMail
 			}
 			else if (nativeMessage.Body is Multipart)
 			{
-                
+
 				var body = nativeMessage.Body as Multipart;
 				foreach (var part in body)
 				{
@@ -133,7 +133,7 @@ namespace OneScript.InternetMail
 				var part = (MimePart)attachment;
 				var fileName = part.FileName;
 				var stream = new MemoryStream();
-                
+
 				part.ContentObject.DecodeTo(stream);
 				BinaryDataContext bin = new BinaryDataContext(stream.ToArray());
 				Attachments.Add(bin, fileName);
