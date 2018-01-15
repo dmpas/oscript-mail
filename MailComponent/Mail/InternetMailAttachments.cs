@@ -60,8 +60,7 @@ namespace OneScript.InternetMail
 
 		public InternetMailAttachment Add(BinaryDataContext data, string attachmentName = "")
 		{
-			var attachment = new InternetMailAttachment();
-			attachment.Data = data;
+			var attachment = new InternetMailAttachment(data, attachmentName);
 			attachment.Name = attachmentName;
 			_data.Add(attachment);
 			return attachment;
