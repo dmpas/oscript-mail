@@ -2,14 +2,14 @@ version: 1.0.6-{build}
 image: Visual Studio 2017
 environment:
   main_project: MailComponent
-before_build:
-- ps: nuget restore
 init:
 - ps: Set-WinSystemLocale ru-RU
 - ps: Start-Sleep -s 5
 - ps: Restart-Computer
 install:
 - cmd: >-
+    nuget install
+
     mkdir engine
 
     cd engine
