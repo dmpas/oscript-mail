@@ -8,8 +8,6 @@ init:
 - ps: Restart-Computer
 install:
 - cmd: >-
-    nuget install
-
     mkdir engine
 
     cd engine
