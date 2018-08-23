@@ -8,8 +8,6 @@ init:
 - ps: Restart-Computer
 install:
 - cmd: >-
-    nuget restore
-    
     cd ..
     
     mkdir engine
@@ -31,6 +29,10 @@ install:
     oscript -version
 
     opm install opm
+
+before_build:
+- cmd: >-
+    nuget restore
 
 build:
   verbosity: minimal
