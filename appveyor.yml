@@ -30,6 +30,8 @@ install:
 
     opm install opm
 
+    cd %APPVEYOR_BUILD_FOLDER%
+
 before_build:
 - cmd: >-
     nuget restore
