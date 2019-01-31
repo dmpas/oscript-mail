@@ -1,15 +1,15 @@
-version: 1.0.5-{build}
+version: 1.0.6-{build}
 image: Visual Studio 2017
 environment:
   main_project: MailComponent
-before_build:
-- ps: nuget restore
 init:
 - ps: Set-WinSystemLocale ru-RU
 - ps: Start-Sleep -s 5
 - ps: Restart-Computer
 install:
 - cmd: >-
+    cd ..
+    
     mkdir engine
 
     cd engine
@@ -30,6 +30,12 @@ install:
 
     opm install opm
 
+    cd %APPVEYOR_BUILD_FOLDER%
+
+before_build:
+- cmd: >-
+    nuget restore
+
 build:
   verbosity: minimal
 configuration: Release
@@ -40,7 +46,7 @@ after_build:
 - cmd: >-
     mkdir bin
 
-    OneScriptDocumenter.exe json bin\syntaxHelp.json %main_project%\bin\%CONFIGURATION%\%main_project%.dll
+    ..\OneScriptDocumenter.exe json bin\syntaxHelp.json %main_project%\bin\%CONFIGURATION%\%main_project%.dll
     
     del %main_project%\bin\%CONFIGURATION%\*.pdb
 
