@@ -14,7 +14,7 @@ install:
 
     cd engine
 
-    appveyor DownloadFile http://oscript.io/downloads/latest/exe -FileName os.exe
+    appveyor DownloadFile http://oscript.io/downloads/1_1_1/OneScript-1.1.1-setup.exe -FileName os.exe
 
     os.exe /silent
 
