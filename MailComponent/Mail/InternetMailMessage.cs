@@ -130,13 +130,24 @@ namespace OneScript.InternetMail
 
 			foreach (var attachment in nativeMessage.Attachments)
 			{
-				var part = (MimePart)attachment;
-				var fileName = part.FileName;
-				var stream = new MemoryStream();
+				try
+				{
+					var part = (MimePart)attachment;
+					var fileName = part.FileName;
+					var stream = new MemoryStream();
 
-				part.ContentObject.DecodeTo(stream);
-				BinaryDataContext bin = new BinaryDataContext(stream.ToArray());
-				Attachments.Add(bin, fileName);
+					part.ContentObject.DecodeTo(stream);
+					BinaryDataContext bin = new BinaryDataContext(stream.ToArray());
+					Attachments.Add(bin, fileName);
+				}
+				catch (System.InvalidCastException e)
+				{
+					// Если во вложении письмо, выкидывает ошибку приведения типов
+					// TODO: MessagePart
+					// if (e.Source != null)
+					//	Console.WriteLine("System.FormatException source: {0}", e.StackTrace);
+					// throw;
+				}
 			}
 		}
 
@@ -446,10 +457,18 @@ namespace OneScript.InternetMail
 
 			headers.Add(fieldName, stringValue);
 			if (fieldName.Equals("BCC", StringComparison.InvariantCultureIgnoreCase))
-				Bcc.Add(stringValue);
+			{
+				string[] addresses = stringValue.Split(',');
+				foreach (var addr in addresses)
+					Bcc.Add(addr);
+			}				
 
 			else if (fieldName.Equals("CC", StringComparison.InvariantCultureIgnoreCase))
-				Cc.Add(stringValue);
+			{
+				string[] addresses = stringValue.Split(',');
+				foreach (var addr in addresses)
+					Cc.Add(addr);
+			}
 
 			else if (fieldName.Equals("Date", StringComparison.InvariantCultureIgnoreCase))
 			{
