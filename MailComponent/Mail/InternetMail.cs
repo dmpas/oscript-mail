@@ -6,11 +6,9 @@ at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
 using System;
 using ScriptEngine.Machine.Contexts;
-using ScriptEngine.Machine;
-using ScriptEngine.HostedScript.Library;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using MimeKit;
+using OneScript.Contexts;
+using OneScript.Exceptions;
+using OneScript.StandardLibrary.Collections;
 
 namespace OneScript.InternetMail
 {

@@ -7,10 +7,13 @@ at http://mozilla.org/MPL/2.0/.
 using System;
 using ScriptEngine.Machine.Contexts;
 using ScriptEngine.Machine;
-using ScriptEngine.HostedScript.Library;
-using ScriptEngine.HostedScript.Library.Binary;
+using OneScript.Contexts;
+using OneScript.StandardLibrary.Binary;
+using OneScript.StandardLibrary.Collections;
 using System.IO;
 using MimeKit;
+using OneScript.Values;
+using OneScript.Exceptions;
 
 namespace OneScript.InternetMail
 {
@@ -136,7 +139,7 @@ namespace OneScript.InternetMail
 					var fileName = part.FileName;
 					var stream = new MemoryStream();
 
-					part.ContentObject.DecodeTo(stream);
+					part.Content.DecodeTo(stream);
 					BinaryDataContext bin = new BinaryDataContext(stream.ToArray());
 					Attachments.Add(bin, fileName);
 				}
@@ -453,7 +456,7 @@ namespace OneScript.InternetMail
 			if (encodingMode == null)
 				encodingMode = NonAsciiSymbolsEncodingMode;
 
-			var stringValue = value.AsString();
+			var stringValue = value.ExplicitString();
 
 			headers.Add(fieldName, stringValue);
 			if (fieldName.Equals("BCC", StringComparison.InvariantCultureIgnoreCase))
@@ -496,8 +499,8 @@ namespace OneScript.InternetMail
 
 			var messageToSend = new MimeMessage();
 
-			if (Sender.DataType == DataType.String)
-				messageToSend.From.Add(new MailboxAddress(SenderName, Sender.AsString()));
+			if (Sender is BslStringValue)
+				messageToSend.From.Add(new MailboxAddress(SenderName, Sender.ExplicitString()));
 			else if (Sender is InternetMailAddress)
 				messageToSend.From.Add((Sender as InternetMailAddress).GetInternalObject());
 			else
@@ -527,7 +530,7 @@ namespace OneScript.InternetMail
 				{
 					var mimeattachment = new MimePart()
 					{
-						ContentObject = new ContentObject(((BinaryDataContext) attachment.Data.AsObject()).OpenStreamForRead().GetUnderlyingStream(), ContentEncoding.Default),
+						Content = new MimeContent(((BinaryDataContext) attachment.Data.AsObject()).OpenStreamForRead().GetUnderlyingStream(), ContentEncoding.Default),
 						ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
 						ContentTransferEncoding = ContentEncoding.Base64,
 						FileName = attachment.FileName

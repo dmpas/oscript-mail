@@ -5,8 +5,7 @@ was not distributed with this file, You can obtain one
 at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
 using System;
-using ScriptEngine.Machine.Contexts;
-using ScriptEngine;
+using OneScript.Contexts.Enums;
 
 namespace OneScript.InternetMail
 {
@@ -21,13 +20,13 @@ namespace OneScript.InternetMail
 		/// <summary>
 		/// При разборе почтового сообщения обнаружены ошибки. Некоторые поля сообщения могут быть не заполнены.
 		/// </summary>
-		[EnumItem("ОбнаруженыОшибки", "ErrorsDetected")]
+		[EnumValue("ОбнаруженыОшибки", "ErrorsDetected")]
 		ErrorsDetected,
 
 		/// <summary>
 		/// При разборе почтового соощения ошибок обнаружено не было.
 		/// </summary>
-		[EnumItem("ОшибокНеОбнаружено", "ErrorsNotDetected")]
+		[EnumValue("ОшибокНеОбнаружено", "ErrorsNotDetected")]
 		ErrorsNotDetected
 	}
 }
