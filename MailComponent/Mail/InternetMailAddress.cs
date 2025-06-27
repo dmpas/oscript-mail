@@ -6,6 +6,7 @@ at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
 using System;
 using ScriptEngine.Machine.Contexts;
+using OneScript.Contexts;
 using System.Net.Mail;
 using MimeKit;
 

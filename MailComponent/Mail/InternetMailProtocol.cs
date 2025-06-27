@@ -4,9 +4,7 @@ Mozilla Public License, v.2.0. If a copy of the MPL
 was not distributed with this file, You can obtain one 
 at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
-using System;
-using ScriptEngine.Machine.Contexts;
-using ScriptEngine;
+using OneScript.Contexts.Enums;
 
 namespace OneScript.InternetMail
 {
@@ -20,19 +18,19 @@ namespace OneScript.InternetMail
 		/// <summary>
 		/// Соответствует IMAP протоколу.
 		/// </summary>
-		[EnumItem("IMAP", "Имап")]
+		[EnumValue("IMAP", "Имап")]
 		Imap,
 
 		/// <summary>
 		/// Соответствует POP3 протоколу.
 		/// </summary>
-		[EnumItem("POP3", "ПОП3")]
+		[EnumValue("POP3", "ПОП3")]
 		Pop3,
 
 		/// <summary>
 		/// Соответствует SMTP протоколу.
 		/// </summary>
-		[EnumItem("SMTP", "СМТП")]
+		[EnumValue("SMTP", "СМТП")]
 		Smtp
 
 	}

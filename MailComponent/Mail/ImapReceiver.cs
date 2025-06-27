@@ -11,7 +11,8 @@ using MailKit;
 using MailKit.Search;
 using System.Linq;
 using System.Collections.Generic;
-using ScriptEngine.HostedScript.Library;
+using OneScript.StandardLibrary.Collections;
+using OneScript.Values;
 
 namespace OneScript.InternetMail
 {
@@ -103,12 +104,12 @@ namespace OneScript.InternetMail
 				var Uids = new List<UniqueId>();
 				foreach (var data in ids)
 				{
-					if (data.DataType == DataType.String)
+					if (data is BslStringValue)
 					{
 						// Идентификатор сообщения
-						Uids.Add(InternalIdToUniqueId(data.AsString()));
+						Uids.Add(InternalIdToUniqueId(data.ExplicitString()));
 					}
-					else if (data.DataType == DataType.Number)
+					else if (data is BslNumericValue)
 					{
 						// Передан порядковый номер в текущем ящике
 						var index = (int)data.AsNumber();
@@ -121,7 +122,7 @@ namespace OneScript.InternetMail
 						// ИнтернетПочтовоеСообщение
 						foreach (var id in (data as InternetMailMessage).Uid)
 						{
-							Uids.Add(InternalIdToUniqueId(id.AsString()));
+							Uids.Add(InternalIdToUniqueId(id.ExplicitString()));
 						}
 					}
 					else if (data is ArrayImpl)
@@ -129,7 +130,7 @@ namespace OneScript.InternetMail
 						// Массив идентификаторов
 						foreach (var id in (data as ArrayImpl))
 						{
-							Uids.Add(InternalIdToUniqueId(id.AsString()));
+							Uids.Add(InternalIdToUniqueId(id.ExplicitString()));
 						}
 					}
 				}
@@ -188,7 +189,7 @@ namespace OneScript.InternetMail
 			                                     | MessageSummaryItems.Flags
 			                                     | MessageSummaryItems.UniqueId
 			                                     | MessageSummaryItems.InternalDate
-												 | MessageSummaryItems.MessageSize
+												 | MessageSummaryItems.Size
 			;
 
 			IList<IMessageSummary> allHeaders;
@@ -225,7 +226,7 @@ namespace OneScript.InternetMail
 				var headerWithUid = ivHeaderWithUid as InternetMailMessage;
 				var Id = headerWithUid.Uid.Get(0);
 
-				if (identifiers == null || identifiers.Find(Id).DataType == DataType.Undefined)
+				if (identifiers == null || identifiers.Find(Id) == BslUndefinedValue.Instance)
 					result.Add(Id);
 			}
 

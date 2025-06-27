@@ -5,7 +5,7 @@ was not distributed with this file, You can obtain one
 at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
 using System;
-using ScriptEngine;
+using OneScript.Contexts.Enums;
 
 namespace OneScript.InternetMail
 {
@@ -18,20 +18,20 @@ namespace OneScript.InternetMail
 		/// <summary>
 		/// Кодируются методом MIME.
 		/// </summary>
-		[EnumItem("MIME", "МИМЕ")]
+		[EnumValue("MIME", "МИМЕ")]
 		Mime,
 
 		/// <summary>
 		/// Кодируются методом Quoted-Printable.
 		/// </summary>
-		[EnumItem("QuotedPrintable", "Кодировать")]
+		[EnumValue("QuotedPrintable", "Кодировать")]
 		QuotedPrintable,
 
 		/// <summary>
 		/// Все поля заголовков, содержащие не ASCII символы кодироваться не будут.
 		/// Все символы будут конвертироваться в кодировку, заданною свойством Кодировка.
 		/// </summary>
-		[EnumItem("БезКодирования", "None")]
+		[EnumValue("БезКодирования", "None")]
 		None
 	}
 }

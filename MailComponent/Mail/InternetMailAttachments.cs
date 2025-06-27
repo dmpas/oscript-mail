@@ -9,7 +9,11 @@ using ScriptEngine.Machine.Contexts;
 using ScriptEngine.Machine;
 using System.Collections.Generic;
 using System.Collections;
-using ScriptEngine.HostedScript.Library.Binary;
+using OneScript.StandardLibrary.Binary;
+using OneScript.Contexts;
+using OneScript.Execution;
+using OneScript.Exceptions;
+using OneScript.Values;
 
 namespace OneScript.InternetMail
 {
@@ -17,7 +21,7 @@ namespace OneScript.InternetMail
 	/// Коллекция почтовых вложений.
 	/// </summary>
 	[ContextClass("ИнтернетПочтовыеВложения", "InternetMailAttachments")]
-	public class InternetMailAttachments : AutoContext<InternetMailAttachments>, ICollectionContext, IEnumerable<InternetMailAttachment>
+	public class InternetMailAttachments : AutoContext<InternetMailAttachments>, ICollectionContext<InternetMailAttachment>, IEnumerable<InternetMailAttachment>
 	{
 		public InternetMailAttachments()
 		{
@@ -86,8 +90,8 @@ namespace OneScript.InternetMail
 		[ContextMethod("Добавить", "Add")]
 		public InternetMailAttachment Add(IValue source, string attachmentName = "")
 		{
-			if (source.DataType == DataType.String)
-				return Add(source.AsString(), attachmentName);
+			if (source is BslStringValue)
+				return Add(source.ExplicitString(), attachmentName);
 			else if (source is BinaryDataContext)
 				return Add(source as BinaryDataContext, attachmentName);
 			else if (source is InternetMailMessage)
@@ -124,7 +128,7 @@ namespace OneScript.InternetMail
 		[ContextMethod("Удалить", "Delete")]
 		public void Delete(IValue element)
 		{
-			if (element.DataType == DataType.Number)
+			if (element is BslNumericValue)
 				_data.RemoveAt((int)element.AsNumber());
 
 			else if (element is InternetMailAttachment)
@@ -132,5 +136,9 @@ namespace OneScript.InternetMail
 
 			throw RuntimeException.InvalidArgumentType(nameof(element));
 		}
-	}
+
+        int ICollectionContext<InternetMailAttachment>.Count(IBslProcess process) {
+			return Count();
+        }
+    }
 }

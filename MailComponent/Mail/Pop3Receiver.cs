@@ -8,7 +8,9 @@ using System;
 using ScriptEngine.Machine;
 using MailKit.Net.Pop3;
 using System.Collections.Generic;
-using ScriptEngine.HostedScript.Library;
+using OneScript.StandardLibrary.Collections;
+using OneScript.Values;
+using OneScript.Exceptions;
 
 namespace OneScript.InternetMail
 {
@@ -66,22 +68,22 @@ namespace OneScript.InternetMail
 				var Uids = new List<string>();
 				foreach (var data in ids)
 				{
-					if (data.DataType == DataType.String)
+					if (data is BslStringValue)
 					{
-						Uids.Add(data.AsString());
+						Uids.Add(data.ExplicitString());
 					}
 					else if (data is InternetMailMessage)
 					{
 						foreach (var id in (data as InternetMailMessage).Uid)
 						{
-							Uids.Add(id.AsString());
+							Uids.Add(id.ExplicitString());
 						}
 					}
 					else if (data is ArrayImpl)
 					{
 						foreach (var id in (data as ArrayImpl))
 						{
-							Uids.Add(id.AsString());
+							Uids.Add(id.ExplicitString());
 						}
 					}
 				}
@@ -135,7 +137,7 @@ namespace OneScript.InternetMail
 			{
 				var Id = ValueFactory.Create(uid);
 
-				if (identifiers == null || identifiers.Find(Id).DataType == DataType.Undefined)
+				if (identifiers == null || identifiers.Find(Id) == BslUndefinedValue.Instance)
 					result.Add(Id);
 			}
 

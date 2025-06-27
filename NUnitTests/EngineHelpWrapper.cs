@@ -1,136 +1,114 @@
 ﻿/*----------------------------------------------------------
-This Source Code Form is subject to the terms of the 
-Mozilla Public License, v.2.0. If a copy of the MPL 
-was not distributed with this file, You can obtain one 
+This Source Code Form is subject to the terms of the
+Mozilla Public License, v.2.0. If a copy of the MPL
+was not distributed with this file, You can obtain one
 at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
 using System;
 using System.IO;
-using ScriptEngine.Machine.Contexts;
-using ScriptEngine.HostedScript.Library;
+using OneScript.StandardLibrary;
+using OneScript.StandardLibrary.Collections;
+using ScriptEngine;
 using ScriptEngine.Machine;
-using ScriptEngine.Environment;
 using ScriptEngine.HostedScript;
+using ScriptEngine.HostedScript.Extensions;
+using ScriptEngine.Hosting;
+using OneScript.InternetMail;
+using OneScript.Execution;
 
 namespace NUnitTests
 {
-	public class EngineHelpWrapper : IHostApplication
-	{
+    public class EngineHelpWrapper : IHostApplication
+    {
+        public EngineHelpWrapper() {
+        }
 
-		private HostedScriptEngine engine;
+        private ScriptingEngine Engine { get; set; }
 
-		public EngineHelpWrapper()
-		{
-		}
+        private IBslProcess Process { get; set; }
 
-		public HostedScriptEngine Engine
-		{
-			get
-			{
-				return engine;
-			}
-		}
+        private IValue TestRunner { get; set; }
 
-		public IValue TestRunner { get; private set; }
+        public void StartEngine() {
+            var builder = DefaultEngineBuilder.Create();
+            builder.SetupConfiguration(providers => { });
+            builder.SetDefaultOptions()
+                .UseImports()
+                .UseNativeRuntime()
+                .UseFileSystemLibraries()
+                ;
 
-		public HostedScriptEngine StartEngine()
-		{
-			engine = new HostedScriptEngine();
-			engine.Initialize();
+            Engine = builder.Build();
 
-			// Тут можно указать любой класс из компоненты
-			engine.AttachAssembly(System.Reflection.Assembly.GetAssembly(typeof(OneScript.InternetMail.InternetMail)));
+            // Регистрируем сборку по имени любого из стандартных классов движка
+            Engine.AttachAssembly(System.Reflection.Assembly.GetAssembly(typeof(ArrayImpl)));
 
-			// Подключаем тестовую оболочку
-			engine.AttachAssembly(System.Reflection.Assembly.GetAssembly(typeof(EngineHelpWrapper)));
+            // Тут можно указать любой класс из компоненты
+            Engine.AttachExternalAssembly(System.Reflection.Assembly.GetAssembly(typeof(InternetMail)));
+            
+            Process = Engine.NewProcess();
 
-			var testrunnerSource = LoadFromAssemblyResource("NUnitTests.Tests.testrunner.os");
-			var testrunnerModule = engine.GetCompilerService().CreateModule(testrunnerSource);
+            var hosted = new HostedScriptEngine(Engine);
+            hosted.Initialize();
 
-			engine.LoadUserScript(new ScriptEngine.UserAddedScript()
-			{
-				Type = ScriptEngine.UserAddedScriptType.Class,
-				Module = testrunnerModule,
-				Symbol = "TestRunner"
-			});
+            var cs = Engine.GetCompilerService();
+            var testrunnerSource = LoadCodeFromAssemblyResource("NUnitTests.Tests.testrunner.os");
+            var testRunner = Engine.AttachedScriptsFactory.LoadFromString(cs, testrunnerSource, Process);
 
-			var testRunner = AttachedScriptsFactory.ScriptFactory("TestRunner", new IValue[] { });
-			TestRunner = ValueFactory.Create(testRunner);
+            TestRunner = (IValue)testRunner;
 
-			return engine;
-		}
+        }
 
-		public void RunTestScript(string resourceName)
-		{
-			var source = LoadFromAssemblyResource(resourceName);
-			var module = engine.GetCompilerService().CreateModule(source);
+        public void RunTestScript(string resourceName) {
+            var source = LoadCodeFromAssemblyResource(resourceName);
+            var test = Engine.AttachedScriptsFactory.LoadFromString(Engine.GetCompilerService(), source, Process);
 
-			engine.LoadUserScript(new ScriptEngine.UserAddedScript()
-			{
-				Type = ScriptEngine.UserAddedScriptType.Class,
-				Module = module,
-				Symbol = resourceName
-			});
+            ArrayImpl testArray;
+            {
+                var methodIndex = test.GetMethodNumber("ПолучитьСписокТестов");
+                test.CallAsFunction(methodIndex, new IValue[] { TestRunner }, out var ivTests, Process);
+                testArray = ivTests as ArrayImpl;
+            }
 
-			var test = AttachedScriptsFactory.ScriptFactory(resourceName, new IValue[] { });
-			ArrayImpl testArray;
-			{
-				int methodIndex = test.FindMethod("ПолучитьСписокТестов");
+            foreach (var ivTestName in testArray) {
+                string testName = ivTestName.ExplicitString();
+                var methodIndex = test.GetMethodNumber(testName);
+                if (methodIndex == -1) {
+                    // Тест указан, но процедуры нет или она не экспортирована
+                    continue;
+                }
 
-				{
-					IValue ivTests;
-					test.CallAsFunction(methodIndex, new IValue[] { TestRunner }, out ivTests);
-					testArray = ivTests as ArrayImpl;
-				}
-			}
+                test.CallAsProcedure(methodIndex, new IValue[] { }, Process);
+            }
+        }
 
-			foreach (var ivTestName in testArray)
-			{
-				string testName = ivTestName.AsString();
-				int methodIndex = test.FindMethod(testName);
-				if (methodIndex == -1)
-				{
-					// Тест указан, но процедуры нет или она не экспортирована
-					continue;
-				}
+        private static string LoadCodeFromAssemblyResource(string resourceName) {
+            var asm = System.Reflection.Assembly.GetExecutingAssembly();
+            using var resourceStream = asm.GetManifestResourceStream(resourceName) ??
+                                       throw new NullReferenceException(resourceName);
+            using var reader = new StreamReader(resourceStream);
+            var codeSource = reader.ReadToEnd();
+            return codeSource;
+        }
 
-				test.CallAsProcedure(methodIndex, new IValue[] { });
-			}
-		}
+        public void Echo(string str, MessageStatusEnum status = MessageStatusEnum.Ordinary) {
+            Console.WriteLine(str);
+        }
 
-		public ICodeSource LoadFromAssemblyResource(string resourceName)
-		{
-			var asm = System.Reflection.Assembly.GetExecutingAssembly();
-			string codeSource;
+        public bool InputString(out string result, string prompt, int maxLen, bool multiline) {
+            throw new NotImplementedException();
+        }
 
-			using (Stream s = asm.GetManifestResourceStream(resourceName))
-			{
-				using (StreamReader r = new StreamReader(s))
-				{
-					codeSource = r.ReadToEnd();
-				}
-			}
+        public string[] GetCommandLineArguments() {
+            return new string[] { };
+        }
 
-			return engine.Loader.FromString(codeSource);
-		}
+        public bool InputString(out string result, int maxLen) {
+            result = "";
+            return false;
+        }
 
-		public void Echo(string str, MessageStatusEnum status = MessageStatusEnum.Ordinary)
-		{
-		}
-
-		public string[] GetCommandLineArguments()
-		{
-			return new string[] { };
-		}
-
-		public bool InputString(out string result, int maxLen)
-		{
-			result = "";
-			return false;
-		}
-
-		public void ShowExceptionInfo(Exception exc)
-		{
-		}
-	}
+        public void ShowExceptionInfo(Exception exc) {
+        }
+    }
 }
