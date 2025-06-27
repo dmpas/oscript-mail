@@ -133,8 +133,7 @@ namespace OneScript.InternetMail
 
 			foreach (var attachment in nativeMessage.Attachments)
 			{
-				try
-				{
+                try {
 					var part = (MimePart)attachment;
 					var fileName = part.FileName;
 					var stream = new MemoryStream();
@@ -143,13 +142,9 @@ namespace OneScript.InternetMail
 					BinaryDataContext bin = new BinaryDataContext(stream.ToArray());
 					Attachments.Add(bin, fileName);
 				}
-				catch (System.InvalidCastException e)
-				{
+				catch (InvalidCastException) {
 					// Если во вложении письмо, выкидывает ошибку приведения типов
 					// TODO: MessagePart
-					// if (e.Source != null)
-					//	Console.WriteLine("System.FormatException source: {0}", e.StackTrace);
-					// throw;
 				}
 			}
 		}

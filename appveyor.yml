@@ -63,9 +63,12 @@ test_script:
     os1\bin\oscript.exe testcomponent.os
 
 after_build:
+- ps: dotnet publish --no-build --configuration $env:Configuration
 - cmd: >-
 
-    del %main_project%\bin\%CONFIGURATION%\net6.0\*.pdb
+    set BUILDDIR=%main_project%\bin\%CONFIGURATION%\net6.0\publish
+
+    del %BUILDDIR%\*.pdb
     
     mkdir oslib\Components
 
@@ -73,13 +76,13 @@ after_build:
     
     mkdir oslib\Components\net4
 
-    OneScriptDocumenter.exe json oslib\Components\dotnet\syntaxHelp.json %main_project%\bin\%CONFIGURATION%\net6.0\1script_%main_project%.dll
+    OneScriptDocumenter.exe json oslib\Components\dotnet\syntaxHelp.json %BUILDDIR%\1script_%main_project%.dll
     
-    del %main_project%\bin\%CONFIGURATION%\ScriptEngine*.* %main_project%\bin\%CONFIGURATION%\net6.0\NewtonSoft*.* %main_project%\bin\%CONFIGURATION%\net6.0\DotNetZip*.*
+    del %BUILDDIR%\ScriptEngine*.* %BUILDDIR%\NewtonSoft*.* %BUILDDIR%\DotNetZip*.*
     
-    xcopy %main_project%\bin\%CONFIGURATION%\net6.0\* oslib\Components\dotnet\
+    xcopy %BUILDDIR%\* oslib\Components\dotnet\
     
-    xcopy assets\1script_mail.dll oslib\Components\net4\
+    xcopy assets\*.dll oslib\Components\net4\
     
     cd oslib
 
