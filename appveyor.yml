@@ -51,6 +51,7 @@ build:
 configuration: Release
 test_script:
 - cmd: nunit3-console NUnitTests\bin\%CONFIGURATION%\net6.0\NUnitTests.dll --result=myresults.xml;format=AppVeyor
+- cmd: dotnet nuget locals all --clear
 - cmd: >-
     set OSLIB_LOADER_TRACE=1
     
