@@ -6,8 +6,10 @@ at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
 using System;
 using ScriptEngine.Machine.Contexts;
-using ScriptEngine.HostedScript.Library;
+using OneScript.StandardLibrary.Collections;
+using OneScript.Contexts;
 using MailKit.Search;
+using ScriptEngine.Machine;
 
 namespace OneScript.InternetMail
 {
@@ -21,11 +23,12 @@ namespace OneScript.InternetMail
 		{
 			foreach (var KV in filter)
 			{
-				var myPropertyIndex = this.FindProperty((KV as KeyAndValueImpl).Key.AsString());
-				if (myPropertyIndex != -1)
-				{
-					SetPropValue(myPropertyIndex, KV.Value);
-				}
+				try {
+					var myPropertyIndex = GetPropertyNumber(KV.Key.ExplicitString());
+					if (myPropertyIndex != -1) {
+						SetPropValue(myPropertyIndex, KV.Value);
+					}
+				} finally { }
 			}
 		}
 
@@ -127,7 +130,7 @@ namespace OneScript.InternetMail
 				query = query.And(SearchQuery.SentBefore((DateTime)BeforeDateOfPosting));
 
 			if (AfterDateOfPosting != null)
-				query = query.And(SearchQuery.SentAfter((DateTime)AfterDateOfPosting));
+				query = query.And(SearchQuery.DeliveredAfter((DateTime)AfterDateOfPosting));
 
 			return query;
 		}

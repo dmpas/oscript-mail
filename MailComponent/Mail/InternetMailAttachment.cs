@@ -7,7 +7,8 @@ at http://mozilla.org/MPL/2.0/.
 using System;
 using ScriptEngine.Machine.Contexts;
 using ScriptEngine.Machine;
-using ScriptEngine.HostedScript.Library.Binary;
+using OneScript.Contexts;
+using OneScript.StandardLibrary.Binary;
 
 namespace OneScript.InternetMail
 {

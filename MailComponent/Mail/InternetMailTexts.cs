@@ -9,6 +9,10 @@ using ScriptEngine.Machine.Contexts;
 using ScriptEngine.Machine;
 using System.Collections.Generic;
 using System.Collections;
+using OneScript.Contexts;
+using OneScript.Execution;
+using OneScript.Values;
+using OneScript.Exceptions;
 
 namespace OneScript.InternetMail
 {
@@ -16,7 +20,7 @@ namespace OneScript.InternetMail
 	/// Представляет собой коллекцию объектов типа ИнтернетТекстПочтовогоСообщения.
 	/// </summary>
 	[ContextClass("ИнтернетТекстыПочтовогоСообщения", "InternetMailTexts")]
-	public class InternetMailTexts : AutoContext<InternetMailTexts>, ICollectionContext, IEnumerable<InternetMailText>
+	public class InternetMailTexts : AutoContext<InternetMailTexts>, ICollectionContext<InternetMailText>, IEnumerable<InternetMailText>
 	{
 		private readonly List<InternetMailText> _data = new List<InternetMailText>();
 
@@ -94,7 +98,7 @@ namespace OneScript.InternetMail
 		[ContextMethod("Удалить", "Delete")]
 		public void Delete(IValue element)
 		{
-			if (element.DataType == DataType.Number)
+			if (element is BslNumericValue)
 				_data.RemoveAt((int)element.AsNumber());
 
 			else if (element is InternetMailText)
@@ -102,5 +106,9 @@ namespace OneScript.InternetMail
 
 			throw RuntimeException.InvalidArgumentType(nameof(element));
 		}
-	}
+
+        int ICollectionContext<InternetMailText>.Count(IBslProcess process) {
+			return Count();
+        }
+    }
 }

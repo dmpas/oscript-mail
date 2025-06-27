@@ -8,8 +8,11 @@ using System;
 using System.IO;
 using ScriptEngine.Machine;
 using ScriptEngine.HostedScript;
-using ScriptEngine.HostedScript.Library;
-using System.Configuration;
+using OneScript.StandardLibrary;
+using ScriptEngine.Hosting;
+using OneScript.InternetMail;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace TestApp
 {
@@ -18,54 +21,64 @@ namespace TestApp
 
 		public static HostedScriptEngine StartEngine()
 		{
-			var engine = new ScriptEngine.HostedScript.HostedScriptEngine();
-			engine.Initialize();
+            var mainEngine = DefaultEngineBuilder.Create()
+                .SetDefaultOptions()
+                .SetupEnvironment(envSetup => {
+                    envSetup
+						.AddStandardLibrary()
+						.AddAssembly(typeof(InternetMail).Assembly);
+                })
+                .Build();
+            var engine = new HostedScriptEngine(mainEngine);
+            engine.Initialize();
 
-			// Тут можно указать любой класс из компоненты
-			engine.AttachAssembly(System.Reflection.Assembly.GetAssembly(typeof(OneScript.InternetMail.InternetMail)));
+            return engine;
+        }
 
-			return engine;
-		}
-
-		public static void InjectSettings(HostedScriptEngine engine)
+        public static void InjectSettings(HostedScriptEngine engine)
 		{
-			string server = ConfigurationManager.AppSettings["server"];
-			string userName = ConfigurationManager.AppSettings["userName"];
-			string password = ConfigurationManager.AppSettings["password"];
-			string replyTo = ConfigurationManager.AppSettings["replyTo"] ?? String.Format("{0}@{1}", userName, server);
-			string pop3server = ConfigurationManager.AppSettings["pop3server"] ?? server;
-			string imapserver = ConfigurationManager.AppSettings["imapserver"] ?? server;
+
+			var cfg = new ConfigurationBuilder()
+				.AddJsonFile("appsettings.json")
+				.Build();
+
+			string server = cfg.GetSection("AppSettings:server").Value;
+			string userName = cfg.GetSection("AppSettings:user").Value;
+			string password = cfg.GetSection("AppSettings:password").Value;
+			string replyTo = cfg.GetSection("AppSettings:replyTo").Value?? String.Format("{0}@{1}", userName, server);
+			string pop3server = cfg.GetSection("AppSettings:pop3server").Value ?? server;
+			string imapserver = cfg.GetSection("AppSettings:imapserver").Value ?? server;
 
 			int portSmtp;
 			bool useSsl;
 			int timeout;
 
-			if (!Int32.TryParse(ConfigurationManager.AppSettings["portSmtp"], out portSmtp))
+			if (!Int32.TryParse(cfg.GetSection("AppSettings:portSmtp").Value, out portSmtp))
 				portSmtp = 25;
 
-			if (!Boolean.TryParse(ConfigurationManager.AppSettings["useSsl"], out useSsl))
+			if (!Boolean.TryParse(cfg.GetSection("AppSettings:useSsl").Value, out useSsl))
 				useSsl = true;
 
-			if (!Int32.TryParse(ConfigurationManager.AppSettings["timeout"], out timeout))
+			if (!Int32.TryParse(cfg.GetSection("AppSettings:timeout").Value, out timeout))
 				timeout = 30;
 
-			engine.InjectGlobalProperty("Сервер", ValueFactory.Create(server), true);
-			engine.InjectGlobalProperty("СерверPOP3", ValueFactory.Create(pop3server), true);
-			engine.InjectGlobalProperty("СерверIMAP", ValueFactory.Create(imapserver), true);
-			engine.InjectGlobalProperty("Пользователь", ValueFactory.Create(userName), true);
-			engine.InjectGlobalProperty("Пароль", ValueFactory.Create(password), true);
-			engine.InjectGlobalProperty("ПортSMTP", ValueFactory.Create(portSmtp), true);
-			engine.InjectGlobalProperty("Отправитель", ValueFactory.Create(replyTo), true);
-			engine.InjectGlobalProperty("ИспользоватьSSLSMTP", ValueFactory.Create(useSsl), true);
-			engine.InjectGlobalProperty("ИспользоватьSSLPOP3", ValueFactory.Create(useSsl), true);
-			engine.InjectGlobalProperty("ИспользоватьSSLIMAP", ValueFactory.Create(useSsl), true);
-			engine.InjectGlobalProperty("Таймаут", ValueFactory.Create(timeout), true);
+			engine.InjectGlobalProperty("Сервер", "Server", ValueFactory.Create(server), true);
+			engine.InjectGlobalProperty("СерверPOP3", "ServerPOP3", ValueFactory.Create(pop3server), true);
+			engine.InjectGlobalProperty("СерверIMAP", "ServerIMAP", ValueFactory.Create(imapserver), true);
+			engine.InjectGlobalProperty("Пользователь", "User", ValueFactory.Create(userName), true);
+			engine.InjectGlobalProperty("Пароль", "Password", ValueFactory.Create(password), true);
+			engine.InjectGlobalProperty("ПортSMTP", "SMTPPort", ValueFactory.Create(portSmtp), true);
+			engine.InjectGlobalProperty("Отправитель", "Sender", ValueFactory.Create(replyTo), true);
+			engine.InjectGlobalProperty("ИспользоватьSSLSMTP", "UseSslSmtp", ValueFactory.Create(useSsl), true);
+			engine.InjectGlobalProperty("ИспользоватьSSLPOP3", "UseSslPop3", ValueFactory.Create(useSsl), true);
+			engine.InjectGlobalProperty("ИспользоватьSSLIMAP", "UseSslImap", ValueFactory.Create(useSsl), true);
+			engine.InjectGlobalProperty("Таймаут", "Timeout", ValueFactory.Create(timeout), true);
 		}
 
 		public static string LoadFromAssemblyResource(string resourceName)
 		{
-			var asm = System.Reflection.Assembly.GetExecutingAssembly();
-			string codeSource;
+			var asm = Assembly.GetExecutingAssembly();
+            string codeSource;
 
 			using (Stream s = asm.GetManifestResourceStream(resourceName))
 			{
@@ -113,5 +126,13 @@ namespace TestApp
 		{
 			return new string[] { "1", "2", "3" }; // Здесь можно зашить список аргументов командной строки
 		}
-	}
+
+        void IHostApplication.Echo(string str, MessageStatusEnum status) {
+            Console.WriteLine(str);
+        }
+
+        bool IHostApplication.InputString(out string result, string prompt, int maxLen, bool multiline) {
+            throw new NotImplementedException();
+        }
+    }
 }

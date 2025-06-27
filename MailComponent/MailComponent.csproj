@@ -1,91 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EA173D06-CCD2-45D5-A263-DC866289517A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>OneScript.InternetMail</RootNamespace>
-    <AssemblyName>MailComponent</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\MailComponent.xml</DocumentationFile>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\MailComponent.xml</DocumentationFile>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="ScriptEngine, Version=1.0.20.107, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\OneScript.1.0.20\lib\net452\ScriptEngine.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ScriptEngine.HostedScript, Version=1.0.20.107, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\OneScript.StandardLibrary.1.0.20\lib\net452\ScriptEngine.HostedScript.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="DotNetZip">
-      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
-    </Reference>
-    <Reference Include="BouncyCastle.Crypto">
-      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Security" />
-    <Reference Include="MimeKit">
-      <HintPath>..\packages\MimeKit.1.10.0\lib\net45\MimeKit.dll</HintPath>
-    </Reference>
-    <Reference Include="MailKit">
-      <HintPath>..\packages\MailKit.1.10.1\lib\net45\MailKit.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Mail\InternetMail.cs" />
-    <Compile Include="Mail\InternetMailAddress.cs" />
-    <Compile Include="Mail\InternetMailAddresses.cs" />
-    <Compile Include="Mail\InternetMailAttachment.cs" />
-    <Compile Include="Mail\InternetMailAttachmentEncodingMode.cs" />
-    <Compile Include="Mail\InternetMailAttachments.cs" />
-    <Compile Include="Mail\InternetMailMessage.cs" />
-    <Compile Include="Mail\InternetMailMessageImportance.cs" />
-    <Compile Include="Mail\InternetMailMessageNonASCIISymbolsEncodingMode.cs" />
-    <Compile Include="Mail\InternetMailMessageParseStatus.cs" />
-    <Compile Include="Mail\InternetMailProfile.cs" />
-    <Compile Include="Mail\InternetMailProtocol.cs" />
-    <Compile Include="Mail\InternetMailText.cs" />
-    <Compile Include="Mail\InternetMailTextProcessing.cs" />
-    <Compile Include="Mail\InternetMailTexts.cs" />
-    <Compile Include="Mail\InternetMailTextType.cs" />
-    <Compile Include="Mail\Pop3Receiver.cs" />
-    <Compile Include="Mail\IMailReceiver.cs" />
-    <Compile Include="Mail\NotSupportedInSelectedProtocol.cs" />
-    <Compile Include="Mail\ImapReceiver.cs" />
-    <Compile Include="Mail\ImapSearchFilter.cs" />
-    <Compile Include="Mail\IMailSender.cs" />
-    <Compile Include="Mail\SmtpSender.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>mail</RootNamespace>
+        <PackageVersion>2.0.0</PackageVersion>
+        <AssemblyVersion>2.0.0</AssemblyVersion>
+        <FileVersion>2.0.0</FileVersion>
+        <Company>1script_mail</Company>
+        <AssemblyName>1script_mail</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="OneScript" Version="2.0.0-rc.7" />
+        <PackageReference Include="OneScript.CoreLib" Version="2.0.0-rc.7" />
+        <PackageReference Include="OneScript.StandardLibrary" Version="2.0.0-rc.7" />
+		<PackageReference Include="MailKit" Version="4.5.0" />
+	</ItemGroup>
+
 </Project>

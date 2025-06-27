@@ -5,8 +5,7 @@ was not distributed with this file, You can obtain one
 at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
 using System;
-using ScriptEngine.Machine.Contexts;
-using ScriptEngine;
+using OneScript.Contexts.Enums;
 
 namespace OneScript.InternetMail
 {
@@ -20,13 +19,13 @@ namespace OneScript.InternetMail
 		/// <summary>
 		/// Кодирование вложений способом MIME.
 		/// </summary>
-		[EnumItem("MIME", "МИМЕ")]
+		[EnumValue("MIME", "МИМЕ")]
 		Mime,
 
 		/// <summary>
 		/// Кодирование вложений способом UUEncode.
 		/// </summary>
-		[EnumItem("UUEncode", "УУЕнкоде")]
+		[EnumValue("UUEncode", "УУЕнкоде")]
 		Uuencode
 
 	}

@@ -4,9 +4,7 @@ Mozilla Public License, v.2.0. If a copy of the MPL
 was not distributed with this file, You can obtain one 
 at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
-using System;
-using ScriptEngine.Machine.Contexts;
-using ScriptEngine;
+using OneScript.Contexts.Enums;
 
 namespace OneScript.InternetMail
 {
@@ -29,19 +27,19 @@ namespace OneScript.InternetMail
 		/// Поведение может различаться при работе с разными клиентами и на различных версиях операционной системы.
 		/// Рекомендуется проверять результат на устройствах конечных пользователей.
 		/// </summary>
-		[EnumItem("HTML", "ГиперТекст")]
+		[EnumValue("HTML", "ГиперТекст")]
 		Html,
 
 		/// <summary>
 		/// Простой текст почтового сообщения. Отображается "как есть".
 		/// </summary>
-		[EnumItem("ПростойТекст", "PlainText")]
+		[EnumValue("ПростойТекст", "PlainText")]
 		PlainText,
 
 		/// <summary>
 		/// Текст почтового сообщения в формате Rich Text.
 		/// </summary>
-		[EnumItem("РазмеченныйТекст", "RichText")]
+		[EnumValue("РазмеченныйТекст", "RichText")]
 		RichText
 	}
 }

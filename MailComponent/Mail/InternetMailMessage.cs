@@ -7,10 +7,13 @@ at http://mozilla.org/MPL/2.0/.
 using System;
 using ScriptEngine.Machine.Contexts;
 using ScriptEngine.Machine;
-using ScriptEngine.HostedScript.Library;
-using ScriptEngine.HostedScript.Library.Binary;
+using OneScript.Contexts;
+using OneScript.StandardLibrary.Binary;
+using OneScript.StandardLibrary.Collections;
 using System.IO;
 using MimeKit;
+using OneScript.Values;
+using OneScript.Exceptions;
 
 namespace OneScript.InternetMail
 {
@@ -130,13 +133,19 @@ namespace OneScript.InternetMail
 
 			foreach (var attachment in nativeMessage.Attachments)
 			{
-				var part = (MimePart)attachment;
-				var fileName = part.FileName;
-				var stream = new MemoryStream();
+                try {
+					var part = (MimePart)attachment;
+					var fileName = part.FileName;
+					var stream = new MemoryStream();
 
-				part.ContentObject.DecodeTo(stream);
-				BinaryDataContext bin = new BinaryDataContext(stream.ToArray());
-				Attachments.Add(bin, fileName);
+					part.Content.DecodeTo(stream);
+					BinaryDataContext bin = new BinaryDataContext(stream.ToArray());
+					Attachments.Add(bin, fileName);
+				}
+				catch (InvalidCastException) {
+					// Если во вложении письмо, выкидывает ошибку приведения типов
+					// TODO: MessagePart
+				}
 			}
 		}
 
@@ -442,14 +451,22 @@ namespace OneScript.InternetMail
 			if (encodingMode == null)
 				encodingMode = NonAsciiSymbolsEncodingMode;
 
-			var stringValue = value.AsString();
+			var stringValue = value.ExplicitString();
 
 			headers.Add(fieldName, stringValue);
 			if (fieldName.Equals("BCC", StringComparison.InvariantCultureIgnoreCase))
-				Bcc.Add(stringValue);
+			{
+				string[] addresses = stringValue.Split(',');
+				foreach (var addr in addresses)
+					Bcc.Add(addr);
+			}				
 
 			else if (fieldName.Equals("CC", StringComparison.InvariantCultureIgnoreCase))
-				Cc.Add(stringValue);
+			{
+				string[] addresses = stringValue.Split(',');
+				foreach (var addr in addresses)
+					Cc.Add(addr);
+			}
 
 			else if (fieldName.Equals("Date", StringComparison.InvariantCultureIgnoreCase))
 			{
@@ -477,8 +494,8 @@ namespace OneScript.InternetMail
 
 			var messageToSend = new MimeMessage();
 
-			if (Sender.DataType == DataType.String)
-				messageToSend.From.Add(new MailboxAddress(SenderName, Sender.AsString()));
+			if (Sender is BslStringValue)
+				messageToSend.From.Add(new MailboxAddress(SenderName, Sender.ExplicitString()));
 			else if (Sender is InternetMailAddress)
 				messageToSend.From.Add((Sender as InternetMailAddress).GetInternalObject());
 			else
@@ -508,7 +525,7 @@ namespace OneScript.InternetMail
 				{
 					var mimeattachment = new MimePart()
 					{
-						ContentObject = new ContentObject(((BinaryDataContext) attachment.Data.AsObject()).OpenStreamForRead().GetUnderlyingStream(), ContentEncoding.Default),
+						Content = new MimeContent(((BinaryDataContext) attachment.Data.AsObject()).OpenStreamForRead().GetUnderlyingStream(), ContentEncoding.Default),
 						ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
 						ContentTransferEncoding = ContentEncoding.Base64,
 						FileName = attachment.FileName

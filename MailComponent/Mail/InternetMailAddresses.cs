@@ -7,8 +7,12 @@ at http://mozilla.org/MPL/2.0/.
 using System;
 using ScriptEngine.Machine.Contexts;
 using ScriptEngine.Machine;
+using OneScript.Contexts;
+using OneScript.Exceptions;
 using System.Collections.Generic;
 using System.Collections;
+using OneScript.Execution;
+using OneScript.Values;
 
 namespace OneScript.InternetMail
 {
@@ -16,7 +20,7 @@ namespace OneScript.InternetMail
 	/// Представляет собой коллекцию объектов типа ИнтернетПочтовыйАдрес.
 	/// </summary>
 	[ContextClass("ИнтернетПочтовыеАдреса", "InternetMailAddresses")]
-	public class InternetMailAddresses : AutoContext<InternetMailAddresses>, ICollectionContext, IEnumerable<InternetMailAddress>
+	public class InternetMailAddresses : AutoContext<InternetMailAddresses>, ICollectionContext<InternetMailAddress>, IEnumerable<InternetMailAddress>
 	{
 
 		private readonly List<InternetMailAddress> _data = new List<InternetMailAddress>();
@@ -89,7 +93,7 @@ namespace OneScript.InternetMail
 		[ContextMethod("Удалить", "Delete")]
 		public void Delete(IValue element)
 		{
-			if (element.DataType == DataType.Number)
+			if (element is BslNumericValue)
 				_data.RemoveAt((int)element.AsNumber());
 
 			else if (element is InternetMailAddress)
@@ -97,5 +101,9 @@ namespace OneScript.InternetMail
 
 			throw RuntimeException.InvalidArgumentType(nameof(element));
 		}
-	}
+
+        int ICollectionContext<InternetMailAddress>.Count(IBslProcess process) {
+			return Count();
+        }
+    }
 }

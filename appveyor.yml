@@ -1,61 +1,101 @@
-version: 1.0.6-{build}
-image: Visual Studio 2017
+version: 1.0.8-{build}
+image: Visual Studio 2022
 environment:
   main_project: MailComponent
+before_build:
+- ps: nuget restore
 init:
+- REG ADD "HKLM\Software\Microsoft\Command Processor" /v Autorun /t REG_SZ /d "chcp 65001>nul" /f
 - ps: Set-WinSystemLocale ru-RU
-- ps: Start-Sleep -s 5
+- ps: Start-Sleep -s 15
 - ps: Restart-Computer
 install:
 - cmd: >-
+    mkdir os2
+
+    cd os2
+
+    appveyor DownloadFile https://oscript.io/downloads/preview/OneScript-2.0.0-rc.7-fdd-x64.zip -FileName fdd.zip
+
+    7z x fdd.zip > NUL
+    
+    bin\oscript.bat -version
+
+    bin\oscript.bat lib\opm\src\cmd\opm.os install opm
+
     cd ..
-    
-    mkdir engine
 
-    cd engine
-
-    appveyor DownloadFile http://oscript.io/downloads/latest/exe -FileName os.exe
-
-    os.exe /silent
-
-    set PATH=%ProgramFiles(x86)%\OneScript\bin;%PATH%
-
-    cd ..
-    
-    appveyor DownloadFile https://github.com/dmpas/OneScriptDocumenter/releases/download/1.0.13/documenter.zip -FileName OneScriptDocumenter.zip
-    
-    7z x OneScriptDocumenter.zip > NUL
-
-    oscript -version
-
-    opm install opm
-
-    cd %APPVEYOR_BUILD_FOLDER%
-
-before_build:
 - cmd: >-
-    nuget restore
+    mkdir os1
+
+    cd os1
+
+    appveyor DownloadFile https://oscript.io/downloads/latest/zip -FileName latest.zip
+
+    7z x latest.zip > NUL
+    
+    bin\oscript.exe -version
+
+    bin\oscript.exe lib\opm\src\cmd\opm.os install opm
+
+    cd ..
+
+- cmd: >-
+
+    appveyor DownloadFile https://github.com/dmpas/OneScriptDocumenter/releases/download/1.0.13/documenter.zip -FileName OneScriptDocumenter.zip
+
+    7z x OneScriptDocumenter.zip > NUL
 
 build:
   verbosity: minimal
 configuration: Release
 test_script:
-- cmd: nunit3-console --x86 NUnitTests\bin\%CONFIGURATION%\NUnitTests.dll
+- cmd: nunit3-console NUnitTests\bin\%CONFIGURATION%\net6.0\NUnitTests.dll --result=myresults.xml;format=AppVeyor
+- cmd: dotnet nuget locals all --clear
+- cmd: >-
+    set OSLIB_LOADER_TRACE=1
+    
+    os2\bin\oscript.bat testcomponent.os
+    
+- cmd: >-
+    set OSLIB_LOADER_TRACE=1
+    
+    os1\bin\oscript.exe testcomponent.os
 
 after_build:
+- ps: dotnet publish --no-build --configuration $env:Configuration
 - cmd: >-
-    mkdir bin
 
-    ..\OneScriptDocumenter.exe json bin\syntaxHelp.json %main_project%\bin\%CONFIGURATION%\%main_project%.dll
+    set BUILDDIR=%main_project%\bin\%CONFIGURATION%\net6.0\publish
+
+    del %BUILDDIR%\*.pdb
     
-    del %main_project%\bin\%CONFIGURATION%\*.pdb
+    mkdir oslib\Components
 
-    del %main_project%\bin\%CONFIGURATION%\ScriptEngine*.* %main_project%\bin\%CONFIGURATION%\NewtonSoft*.* %main_project%\bin\%CONFIGURATION%\DotNetZip*.*
+    mkdir oslib\Components\dotnet
     
-    xcopy %main_project%\bin\%CONFIGURATION%\* bin\
+    mkdir oslib\Components\net4
 
-    opm build .
+    OneScriptDocumenter.exe json oslib\Components\dotnet\syntaxHelp.json %BUILDDIR%\1script_%main_project%.dll
+    
+    del %BUILDDIR%\ScriptEngine*.* %BUILDDIR%\NewtonSoft*.* %BUILDDIR%\DotNetZip*.*
+    
+    xcopy %BUILDDIR%\* oslib\Components\dotnet\
+    
+    xcopy assets\*.dll oslib\Components\net4\
+    
+    cd oslib
+
+    ..\os2\bin\oscript.bat ..\os2\lib\opm\src\cmd\opm.os build .
+    
+    for %%X in (*.ospx) do (..\os2\bin\oscript.bat ..\os2\lib\opm\src\cmd\opm.os install -f %%X )
+    
+    for %%X in (*.ospx) do (..\os1\bin\oscript.exe ..\os1\lib\opm\src\cmd\opm.os install -f %%X )
+    
+    cd ..
 
 artifacts:
-- path: .\*.ospx
-  name: component
+- path: oslib\*.ospx
+  name: mail
+- path: oslib\Components\dotnet\*.dll
+  name: components

@@ -4,9 +4,7 @@ Mozilla Public License, v.2.0. If a copy of the MPL
 was not distributed with this file, You can obtain one 
 at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
-using System;
-using ScriptEngine.Machine.Contexts;
-using ScriptEngine;
+using OneScript.Contexts.Enums;
 
 namespace OneScript.InternetMail
 {
@@ -20,13 +18,13 @@ namespace OneScript.InternetMail
 		/// Обработка текстов почтового сообщения перед отправкой не требуется. Текст посылается без внутренней обработки.
 		/// Также отключает загрузку картинок при отправке HTML-документов.
 		/// </summary>
-		[EnumItem("НеОбрабатывать", "DontProcess")]
+		[EnumValue("НеОбрабатывать", "DontProcess")]
 		DontProcess,
 
 		/// <summary>
 		/// Тексты и картинки отправляемых HTML-документов загружаются и добавляются к письму как вложения, с соответствующей правкой этих HTML-документов.
 		/// </summary>
-		[EnumItem("Обрабатывать", "Process")]
+		[EnumValue("Обрабатывать", "Process")]
 		Process
 	}
 }

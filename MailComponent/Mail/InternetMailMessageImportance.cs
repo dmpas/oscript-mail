@@ -5,7 +5,7 @@ was not distributed with this file, You can obtain one
 at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------*/
 using System;
-using ScriptEngine;
+using OneScript.Contexts.Enums;
 
 namespace OneScript.InternetMail
 {
@@ -18,31 +18,31 @@ namespace OneScript.InternetMail
 		/// <summary>
 		/// Высокая важность сообщения.
 		/// </summary>
-		[EnumItem("Высокая", "High")]
+		[EnumValue("Высокая", "High")]
 		High,
 
 		/// <summary>
 		/// Наивысшая важность сообщения.
 		/// </summary>
-		[EnumItem("Наивысшая", "Highest")]
+		[EnumValue("Наивысшая", "Highest")]
 		Highest,
 
 		/// <summary>
 		/// Наименьшая важность сообщения.
 		/// </summary>
-		[EnumItem("Наименьшая", "Lowest")]
+		[EnumValue("Наименьшая", "Lowest")]
 		Lowest,
 
 		/// <summary>
 		/// Низкая важность сообщения.
 		/// </summary>
-		[EnumItem("Низкая", "Low")]
+		[EnumValue("Низкая", "Low")]
 		Low,
 
 		/// <summary>
 		/// Обычная важность сообщения.
 		/// </summary>
-		[EnumItem("Обычная", "Normal")]
+		[EnumValue("Обычная", "Normal")]
 		Normal
 	}
 }
