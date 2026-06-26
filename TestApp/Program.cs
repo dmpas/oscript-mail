@@ -35,6 +35,12 @@ namespace TestApp
             return engine;
         }
 
+		private static string makeReplyTo(string userName, string server)
+		{
+			if (userName.Contains("@")) return userName;
+			return $"{userName}@{server}";
+		}
+
         public static void InjectSettings(HostedScriptEngine engine)
 		{
 
@@ -45,7 +51,7 @@ namespace TestApp
 			string server = cfg.GetSection("AppSettings:server").Value;
 			string userName = cfg.GetSection("AppSettings:user").Value;
 			string password = cfg.GetSection("AppSettings:password").Value;
-			string replyTo = cfg.GetSection("AppSettings:replyTo").Value?? String.Format("{0}@{1}", userName, server);
+			string replyTo = cfg.GetSection("AppSettings:replyTo").Value?? makeReplyTo(userName, server);
 			string pop3server = cfg.GetSection("AppSettings:pop3server").Value ?? server;
 			string imapserver = cfg.GetSection("AppSettings:imapserver").Value ?? server;
 
@@ -73,7 +79,7 @@ namespace TestApp
 			engine.InjectGlobalProperty("ИспользоватьSSLPOP3", "UseSslPop3", ValueFactory.Create(useSsl), true);
 			engine.InjectGlobalProperty("ИспользоватьSSLIMAP", "UseSslImap", ValueFactory.Create(useSsl), true);
 			engine.InjectGlobalProperty("Таймаут", "Timeout", ValueFactory.Create(timeout), true);
-		}
+        }
 
 		public static string LoadFromAssemblyResource(string resourceName)
 		{

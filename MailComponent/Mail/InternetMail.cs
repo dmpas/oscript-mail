@@ -164,7 +164,13 @@ namespace OneScript.InternetMail
 
 			IMailSender sender = null;
 			if (protocol == InternetMailProtocol.Smtp)
+			{
+				if (!smtpClient.IsConnected())
+				{
+					smtpClient.Logon(_profile);
+				}
 				sender = smtpClient;
+			}
 			else if (protocol == InternetMailProtocol.Imap)
 			{
 				sender = receiver as ImapReceiver;

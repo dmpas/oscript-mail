@@ -32,6 +32,11 @@ namespace OneScript.InternetMail
 				_client.Authenticate(profile.SmtpUser, profile.SmtpPassword);
 		}
 
+		public bool IsConnected()
+		{
+			return _client.IsConnected;
+		}
+
 		public void Send(InternetMailMessage message, InternetMailTextProcessing processText)
 		{
 			var messageToSend = message.CreateNativeMessage(processText);
