@@ -14,7 +14,7 @@
         <PackageReference Include="OneScript" Version="2.0.1" />
         <PackageReference Include="OneScript.CoreLib" Version="2.0.1" />
         <PackageReference Include="OneScript.StandardLibrary" Version="2.0.1" />
-		<PackageReference Include="MailKit" Version="4.5.0" />
+		<PackageReference Include="MailKit" Version="4.16.0" />
 	</ItemGroup>
 
 </Project>
