@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>TestApp</RootNamespace>
         <PackageVersion>2.0.0</PackageVersion>
         <AssemblyVersion>2.0.0</AssemblyVersion>
@@ -14,9 +14,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="OneScript" Version="2.0.0-rc.7" />
-        <PackageReference Include="OneScript.CoreLib" Version="2.0.0-rc.7" />
-        <PackageReference Include="OneScript.Hosting" Version="2.0.0-rc.7" />
+        <PackageReference Include="OneScript" Version="2.0.1" />
+        <PackageReference Include="OneScript.CoreLib" Version="2.0.1" />
+        <PackageReference Include="OneScript.Hosting" Version="2.0.1" />
     </ItemGroup>
 
     <ItemGroup>

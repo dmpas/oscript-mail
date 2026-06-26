@@ -1,4 +1,4 @@
-version: 1.0.8-{build}
+version: 1.0.9-{build}
 image: Visual Studio 2022
 environment:
   main_project: MailComponent
@@ -15,7 +15,7 @@ install:
 
     cd os2
 
-    appveyor DownloadFile https://oscript.io/downloads/preview/OneScript-2.0.0-rc.10-fdd-x64.zip -FileName fdd.zip
+    appveyor DownloadFile https://oscript.io/downloads/latest/OneScript-2.1.0-fdd-x64.zip -FileName fdd.zip
 
     7z x fdd.zip > NUL
     
@@ -30,7 +30,7 @@ install:
 
     cd os1
 
-    appveyor DownloadFile https://oscript.io/downloads/latest/zip -FileName latest.zip
+    appveyor DownloadFile https://oscript.io/downloads/1_9_4/x64/OneScript-1.9.4-x64.zip -FileName latest.zip
 
     7z x latest.zip > NUL
     
@@ -50,7 +50,7 @@ build:
   verbosity: minimal
 configuration: Release
 test_script:
-- cmd: nunit3-console NUnitTests\bin\%CONFIGURATION%\net6.0\NUnitTests.dll --result=myresults.xml;format=AppVeyor
+- cmd: nunit3-console NUnitTests\bin\%CONFIGURATION%\net8.0\NUnitTests.dll --result=myresults.xml;format=AppVeyor
 - cmd: dotnet nuget locals all --clear
 - cmd: >-
     set OSLIB_LOADER_TRACE=1
@@ -66,7 +66,7 @@ after_build:
 - ps: dotnet publish --no-build --configuration $env:Configuration
 - cmd: >-
 
-    set BUILDDIR=%main_project%\bin\%CONFIGURATION%\net6.0\publish
+    set BUILDDIR=%main_project%\bin\%CONFIGURATION%\net8.0\publish
 
     del %BUILDDIR%\*.pdb
     
